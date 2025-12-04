@@ -1,0 +1,381 @@
+{
+  "header": {
+    "brand": "Smart Education",
+    "home": "Home",
+    "about": "About",
+    "signIn": "Sign In",
+    "getStarted": "Get Started",
+    "dashboard": "Dashboard",
+    "myProfile": "My Profile",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "userAccount": "Account"
+  },
+  "common": {
+    "user": "User",
+    "unknown": "Unknown"
+  },
+  "hero": {
+    "badge": "#1 Student Learning Platform",
+    "title": "Empower Your Learning Journey",
+    "description": "Join thousands of students who are transforming their education with Smart Education. Access powerful tools, connect with peers, and achieve your academic goals.",
+    "buttons": {
+      "getStarted": "Get Started Free →",
+      "learnMore": "Learn More"
+    },
+    "stats": {
+      "students": {
+        "number": "10K+",
+        "label": "Active Students"
+      },
+      "courses": {
+        "number": "500+",
+        "label": "Courses"
+      },
+      "rating": {
+        "number": "4.8★",
+        "label": "Average Rating"
+      }
+    }
+  },
+  "courseShowcase": {
+    "badge": "Featured Courses",
+    "title": "Discover Amazing Learning Content",
+    "description": "Explore our collection of high-quality educational materials designed to enhance your learning experience.",
+    "loading": {
+      "loading": "Loading...",
+      "loadingCourses": "Loading courses..."
+    },
+    "contentTypes": {
+      "video": "Video",
+      "material": "Material",
+      "homework": "Homework",
+      "default": "Content"
+    },
+    "actions": {
+      "viewCourse": "View Course",
+      "loginToAccess": "Login to Access",
+      "viewAll": "View All Courses",
+      "getStarted": "Get Started Free",
+      "joinNow": "Join Now"
+    },
+    "empty": {
+      "noCourses": "No Courses Available",
+      "checkBack": "Check back soon for amazing learning content!"
+    },
+    "meta": {
+      "fileSize": "File Size",
+      "createdAt": "Created At"
+    },
+    "stats": {
+      "totalCourses": {
+        "number": "{{count}}+",
+        "label": "Total Courses"
+      },
+      "happyStudents": {
+        "number": "1000+",
+        "label": "Happy Students"
+      },
+      "averageRating": {
+        "number": "4.9★",
+        "label": "Average Rating"
+      }
+    },
+    "noCoursesAvailable": "No Courses Available",
+    "checkBackSoon": "Check back soon for amazing learning content!",
+    "joinNow": "Join Now",
+    "viewAllCourses": "View All Courses",
+    "viewCourse": "View Course",
+    "video": "Video",
+    "material": "Material",
+    "homework": "Homework",
+    "kb": "KB",
+    "happyStudents": "Happy Students",
+    "averageRating": "Average Rating",
+    "totalCourses": "Total Courses",
+    "zeroBytes": "0 Bytes",
+    "bytes": "Bytes",
+    "mb": "MB",
+    "gb": "GB",
+    "contentType": "Content",
+    "loginToAccess": "Login to Access"
+  },
+  "allCourses": {
+    "title": "All Courses",
+    "description": "Browse all available courses organized by content type",
+    "tabs": {
+      "video": "Video",
+      "material": "Material",
+      "homework": "Homework",
+      "activity": "Activity"
+    },
+    "activity": "Activity",
+    "noCourses": "No {{type}} courses available",
+    "checkBackSoon": "Check back soon for new courses!"
+  },
+
+  "about": {
+    "title": "Why Choose Smart Education?",
+    "description": "We provide everything you need to succeed in your educational journey. From expert-led courses to a supportive community, we've got you covered.",
+    "features": {
+      "qualityEducation": {
+        "title": "Quality Education",
+        "description": "Access premium educational content curated by experts in various fields."
+      },
+      "communitySupport": {
+        "title": "Community Support",
+        "description": "Connect with fellow students and mentors to enhance your learning experience."
+      },
+      "trackProgress": {
+        "title": "Track Progress",
+        "description": "Monitor your learning journey with detailed analytics and insights."
+      },
+      "certifications": {
+        "title": "Certifications",
+        "description": "Earn recognized certificates upon completing courses and milestones."
+      },
+      "flexibleLearning": {
+        "title": "Flexible Learning",
+        "description": "Study at your own pace with 24/7 access to all learning materials."
+      },
+      "securePlatform": {
+        "title": "Secure Platform",
+        "description": "Your data and privacy are protected with enterprise-grade security."
+      }
+    },
+    "stats": {
+      "activeStudents": "Active Students",
+      "coursesAvailable": "Courses Available",
+      "expertInstructors": "Expert Instructors",
+      "successRate": "Success Rate"
+    },
+    "cta": {
+      "title": "Ready to Start Learning?",
+      "description": "Join our community and unlock your full potential today!",
+      "button": "Get Started Now"
+    }
+  },
+  "pages": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot Password?",
+      "signInButton": "Sign In",
+      "signingIn": "Signing In...",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create Account",
+      "backToHome": "Back to Home"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join Smart Education today",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "createAccountButton": "Create Account",
+      "creatingAccount": "Creating Account...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "backToHome": "Back to Home"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password?",
+      "subtitle": "No worries, we'll send you reset instructions",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "resetButton": "Reset Password",
+      "sending": "Sending...",
+      "successMessage": "If an account exists with this email, you will receive password reset instructions.",
+      "backToSignIn": "Back to Sign In",
+      "backToHome": "Back to Home"
+    },
+    "adminDashboard": {
+      "title": "Admin Dashboard",
+      "welcome": "Welcome back, {{name}}!",
+      "adminPrivileges": "Admin Privileges",
+      "adminDescription": "You have full access to manage the system",
+      "stats": {
+        "totalCourses": "Total Courses",
+        "teachers": "Teachers",
+        "students": "Students",
+        "subjects": "Subjects"
+      },
+      "actions": {
+        "userManagement": {
+          "title": "User Management",
+          "description": "Manage all users, roles, and permissions",
+          "button": "Manage Users"
+        },
+        "createTeacher": {
+          "title": "Create Teacher",
+          "description": "Add new teachers to the system",
+          "button": "Add Teacher"
+        },
+        "courseManagement": {
+          "title": "Course Management",
+          "description": "Manage all courses and content",
+          "button": "View Courses"
+        }
+      },
+      "backToDashboard": "Back to Dashboard"
+    },
+    "studentDashboard": {
+      "title": "Student Dashboard",
+      "welcome": "Welcome back, {{name}}!",
+      "studentPortal": "Student Portal",
+      "studentDescription": "Access your courses, assignments, and grades",
+      "stats": {
+        "availableCourses": "Available Courses",
+        "videoLessons": "Video Lessons",
+        "assignments": "Assignments"
+      },
+      "actions": {
+        "browseCourses": {
+          "title": "Browse Courses",
+          "description": "View and access all available courses",
+          "button": "View All Courses"
+        },
+        "downloadMaterials": {
+          "title": "Download Materials",
+          "description": "Access and download course materials",
+          "button": "Go to Materials"
+        }
+      },
+      "quickLinks": {
+        "title": "Quick Links",
+        "watchVideos": "Watch video lessons anytime",
+        "downloadMaterials": "Download study materials",
+        "viewAssignments": "View homework assignments",
+        "browse": "Browse",
+        "access": "Access",
+        "view": "View"
+      },
+      "backToDashboard": "Back to Dashboard"
+    },
+    "teacherDashboard": {
+      "title": "Teacher Dashboard",
+      "welcome": "Welcome back, {{name}}!",
+      "teacherPortal": "Teacher Portal",
+      "teacherDescription": "Manage your classes, students, and teaching materials",
+      "stats": {
+        "totalCourses": "Total Courses",
+        "videoLessons": "Video Lessons",
+        "assignments": "Assignments"
+      },
+      "actions": {
+        "myCourses": {
+          "title": "My Courses",
+          "description": "View and manage all courses",
+          "button": "View Courses"
+        },
+        "createCourse": {
+          "title": "Create Course",
+          "description": "Upload new course content",
+          "button": "Create New"
+        },
+        "statistics": {
+          "title": "Statistics",
+          "description": "View course analytics",
+          "button": "View Stats"
+        }
+      },
+      "backToDashboard": "Back to Dashboard"
+    },
+    "courseView": {
+      "loading": "Loading course...",
+      "errorTitle": "Error Loading Course",
+      "notFoundTitle": "Course Not Found",
+      "notFoundMessage": "The course you're looking for doesn't exist.",
+      "backToCourses": "Back to Courses",
+      "goBack": "Go Back",
+      "subject": "Subject",
+      "createdBy": "Created by",
+      "created": "Created",
+      "description": "Description",
+      "mediaPlayer": "Media Player",
+      "fileInformation": "File Information",
+      "fileName": "File Name",
+      "fileSize": "File Size",
+      "fileType": "File Type",
+      "contentType": "Content Type",
+      "downloadFile": "Download File",
+      "viewFile": "View File",
+      "contentTypes": {
+        "video": "Video/Audio",
+        "material": "Material",
+        "homework": "Homework"
+      },
+      "fileSizes": {
+        "bytes": "Bytes",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      }
+    }
+  },
+  "footer": {
+    "brandName": "Smart Education",
+    "brandDescription": "Empowering students worldwide with quality education and innovative learning tools. Join us in transforming the future of education.",
+    "quickLinksTitle": "Quick Links",
+    "links": {
+      "home": "Home",
+      "about": "About Us",
+      "signUp": "Sign Up",
+      "signIn": "Sign In"
+    },
+    "resourcesTitle": "Resources",
+    "resources": {
+      "helpCenter": "Help Center",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "contactUs": "Contact Us"
+    },
+    "contactTitle": "Contact",
+    "contact": {
+      "address": "123 Education St, Learning City",
+      "email": "info@smartapp.com",
+      "phone": "+1 (555) 123-4567"
+    },
+    "bottom": {
+      "copyright": "©  Smart Education. All rights reserved.",
+      "madeWithLove": "Made with",
+      "forStudents": "for Students"
+    }
+  },
+  "chatbot": {
+    "title": "AI Assistant",
+    "subtitle": "How can I help you today?",
+    "welcomeMessage": "Hello! I'm your AI assistant. I can help you with questions about our platform, courses, or any other topic. What would you like to know?",
+    "placeholder": "Type your message here...",
+    "inputHint": "Press Enter to send, Shift+Enter for new line",
+    "sendMessage": "Send message",
+    "openChat": "Open chat",
+    "close": "Close chat",
+    "clearChat": "Clear conversation",
+    "error": "Error",
+    "errorMessage": "Sorry, I'm having trouble responding right now. Please try again later.",
+    "typing": "AI is typing...",
+    "noResponse": "No response received from AI.",
+    "suggestions": {
+      "title": "Try asking:",
+      "questions": [
+        "What courses are available?",
+        "How do I register for a course?",
+        "What is the learning platform about?",
+        "How can I contact support?"
+      ]
+    }
+  }
+}

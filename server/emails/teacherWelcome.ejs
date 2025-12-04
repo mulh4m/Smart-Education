@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Smart Education - Teacher Account Created</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .title {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .credentials-box {
+            background-color: #f8f9fa;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .credentials-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .credential-item {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .credential-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .credential-value {
+            background-color: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            margin-left: 10px;
+            border: 1px solid #ced4da;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .feature {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .role-badge {
+            display: inline-block;
+            background-color: #ffc107;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning-icon {
+            color: #856404;
+            font-size: 18px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎓 Smart Education</div>
+            <h1 class="title">Welcome to Smart Education!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hi <strong><%= fullName %></strong><span class="role-badge">TEACHER</span>,</p>
+            
+            <p>🎉 Congratulations! An administrator has created a teacher account for you on Smart Education platform!</p>
+            
+            <p>You're now part of our educational community and can start creating and managing courses for students.</p>
+            
+            <div class="credentials-box">
+                <div class="credentials-title">🔐 Your Login Credentials</div>
+                <div class="credential-item">
+                    <span class="credential-label">Email:</span>
+                    <span class="credential-value"><%= email %></span>
+                </div>
+                <div class="credential-item">
+                    <span class="credential-label">Password:</span>
+                    <span class="credential-value"><%= password %></span>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <span class="warning-icon">⚠️</span>
+                <strong>Important Security Notice:</strong> Please change your password after your first login for security purposes. You can do this by going to your Profile Settings.
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">👨‍🏫</div>
+                <h3>As a Teacher, you can:</h3>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>Create and manage your own courses</li>
+                    <li>Upload learning materials and resources (videos, documents, activities)</li>
+                    <li>Create homework and activities for students</li>
+                    <li>View and grade student submissions</li>
+                    <li>Track student progress and performance</li>
+                    <li>Interact with students through the platform</li>
+                    <li>Access teaching tools and analytics</li>
+                </ul>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="<%= loginUrl %>" class="button">Login to Your Account</a>
+            </div>
+            
+            <p><strong>Getting Started:</strong></p>
+            <ol>
+                <li>Click the "Login to Your Account" button above</li>
+                <li>Use the email and password provided in this email</li>
+                <li>Change your password in Profile Settings</li>
+                <li>Explore the teacher dashboard</li>
+                <li>Start creating your first course!</li>
+            </ol>
+            
+            <p>If you have any questions or need assistance getting started, don't hesitate to reach out to our support team or the administrator who created your account.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Welcome to the team!<br><strong>Smart Education Team</strong></p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>© 2024 Smart Education. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

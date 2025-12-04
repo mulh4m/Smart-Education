@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Smart Education</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .title {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .verification-link {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 20px 0;
+        }
+        .role-badge {
+            display: inline-block;
+            background-color: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+        .role-student { background-color: #28a745; }
+        .role-teacher { background-color: #ffc107; color: #333; }
+        .role-admin { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎓 Smart Education</div>
+            <h1 class="title">Welcome to Smart Education!</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hi <strong><%= fullName %></strong><span class="role-badge role-<%= role %>"><%= role %></span>,</p>
+            
+            <p>Thank you for registering with Smart Education! We're excited to have you join our learning community.</p>
+            
+            <p>To complete your registration and start your learning journey, please verify your email address by clicking the button below:</p>
+            
+            <div style="text-align: center;">
+                <a href="<%= verificationUrl %>" class="button">Verify Email Address</a>
+            </div>
+            
+            <p>If the button doesn't work, you can copy and paste this link into your browser:</p>
+            
+            <div class="verification-link">
+                <%= verificationUrl %>
+            </div>
+            
+            <p><strong>Important:</strong> This verification link will expire in 24 hours for security reasons.</p>
+            
+            <p>Once verified, you'll be able to:</p>
+            <ul>
+                <li>Access your personalized dashboard</li>
+                <li>Join courses and learning programs</li>
+                <li>Connect with other students and teachers</li>
+                <li>Track your learning progress</li>
+                <% if (role === 'teacher') { %>
+                <li>Create and manage courses</li>
+                <li>Access teaching tools and resources</li>
+                <% } %>
+                <% if (role === 'admin') { %>
+                <li>Access admin dashboard</li>
+                <li>Manage users and content</li>
+                <li>View system analytics</li>
+                <% } %>
+            </ul>
+            
+            <p>If you didn't create an account with Smart Education, please ignore this email.</p>
+        </div>
+        
+        <div class="footer">
+            <p>Best regards,<br><strong>Smart Education Team</strong></p>
+            <p>This is an automated message. Please do not reply to this email.</p>
+            <p>© 2024 Smart Education. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

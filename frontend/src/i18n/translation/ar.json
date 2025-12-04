@@ -1,0 +1,380 @@
+{
+  "header": {
+    "brand": "التطبيق الذكي",
+    "home": "الرئيسية",
+    "about": "حول",
+    "signIn": "تسجيل الدخول",
+    "getStarted": "ابدأ الآن",
+    "dashboard": "لوحة التحكم",
+    "myProfile": "ملفي الشخصي",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج",
+    "userAccount": "الحساب"
+  },
+  "common": {
+    "user": "مستخدم",
+    "unknown": "غير معروف"
+  },
+  "hero": {
+    "badge": "🚀 المنصة التعليمية رقم 1 للطلاب",
+    "title": "عزّز رحلتك التعليمية",
+    "description": "انضم إلى آلاف الطلاب الذين يطورون تجربتهم التعليمية مع تطبيق سمارت آب. احصل على أدوات قوية، وتواصل مع الزملاء، وحقق أهدافك الأكاديمية.",
+    "buttons": {
+      "getStarted": "ابدأ مجانًا →",
+      "learnMore": "اعرف المزيد"
+    },
+    "stats": {
+      "students": {
+        "number": "10K+",
+        "label": "طلاب نشطون"
+      },
+      "courses": {
+        "number": "500+",
+        "label": "دورات"
+      },
+      "rating": {
+        "number": "4.8★",
+        "label": "متوسط التقييم"
+      }
+    }
+  },
+  "courseShowcase": {
+    "badge": "الدورات المميزة",
+    "title": "اكتشف محتوى تعليمي مذهل",
+    "description": "استكشف مجموعتنا من المواد التعليمية عالية الجودة المصممة لتعزيز تجربتك التعليمية.",
+    "loading": {
+      "loading": "جارٍ التحميل...",
+      "loadingCourses": "جارٍ تحميل الدورات..."
+    },
+    "contentTypes": {
+      "video": "فيديو",
+      "material": "مادة تعليمية",
+      "homework": "واجب",
+      "default": "محتوى"
+    },
+    "actions": {
+      "viewCourse": "عرض الدورة",
+      "loginToAccess": "تسجيل الدخول للوصول",
+      "viewAll": "عرض جميع الدورات",
+      "getStarted": "ابدأ مجانًا",
+      "joinNow": "انضم الآن"
+    },
+    "empty": {
+      "noCourses": "لا توجد دورات متاحة",
+      "checkBack": "عد لاحقًا لمحتوى تعليمي رائع!"
+    },
+    "meta": {
+      "fileSize": "حجم الملف",
+      "createdAt": "تاريخ الإضافة"
+    },
+    "stats": {
+      "totalCourses": {
+        "number": "{{count}}+",
+        "label": "إجمالي الدورات"
+      },
+      "happyStudents": {
+        "number": "1000+",
+        "label": "طلاب سعداء"
+      },
+      "averageRating": {
+        "number": "4.9★",
+        "label": "متوسط التقييم"
+      }
+    },
+    "noCoursesAvailable": "لا توجد دورات متاحة",
+    "checkBackSoon": "عد لاحقًا لمحتوى تعليمي رائع!",
+    "joinNow": "انضم الآن",
+    "viewAllCourses": "عرض جميع الدورات",
+    "viewCourse": "عرض الدورة",
+    "video": "فيديو",
+    "material": "مادة تعليمية",
+    "homework": "واجب",
+    "kb": "كيلوبايت",
+    "happyStudents": "طلاب سعداء",
+    "averageRating": "متوسط التقييم",
+    "totalCourses": "إجمالي الدورات",
+    "zeroBytes": "0 بايت",
+    "bytes": "بايت",
+    "mb": "ميجابايت",
+    "gb": "جيجابايت",
+    "contentType": "محتوى",
+    "loginToAccess": "تسجيل الدخول للوصول"
+  },
+  "allCourses": {
+    "title": "جميع الدورات",
+    "description": "تصفح جميع الدورات المتاحة منظمة حسب نوع المحتوى",
+    "tabs": {
+      "video": "فيديو",
+      "material": "مادة تعليمية",
+      "homework": "واجب",
+      "activity": "نشاط"
+    },
+    "activity": "نشاط",
+    "noCourses": "لا توجد دورات {{type}} متاحة",
+    "checkBackSoon": "عد لاحقًا لدورات جديدة!"
+  },
+  "about": {
+    "title": "لماذا تختار التطبيق الذكي؟",
+    "description": "نوفر لك كل ما تحتاجه للنجاح في رحلتك التعليمية. من الدورات التي يقدمها الخبراء إلى المجتمع الداعم، نحن هنا من أجلك.",
+    "features": {
+      "qualityEducation": {
+        "title": "تعليم عالي الجودة",
+        "description": "احصل على محتوى تعليمي متميز منتقى من قبل خبراء في مختلف المجالات."
+      },
+      "communitySupport": {
+        "title": "دعم المجتمع",
+        "description": "تواصل مع زملاء الدراسة والموجهين لتعزيز تجربة التعلم الخاصة بك."
+      },
+      "trackProgress": {
+        "title": "تتبع التقدم",
+        "description": "راقب رحلة التعلم الخاصة بك مع التحليلات والرؤى التفصيلية."
+      },
+      "certifications": {
+        "title": "الشهادات",
+        "description": "احصل على شهادات معترف بها عند إكمال الدورات والمعالم التعليمية."
+      },
+      "flexibleLearning": {
+        "title": "تعلم مرن",
+        "description": "ادرس بالسرعة التي تناسبك مع الوصول على مدار الساعة طوال أيام الأسبوع لجميع المواد التعليمية."
+      },
+      "securePlatform": {
+        "title": "منصة آمنة",
+        "description": "بياناتك وخصوصيتك محمية بأمان على مستوى المؤسسات."
+      }
+    },
+    "stats": {
+      "activeStudents": "طلاب نشطون",
+      "coursesAvailable": "دورات متاحة",
+      "expertInstructors": "مدربون خبراء",
+      "successRate": "معدل النجاح"
+    },
+    "cta": {
+      "title": "مستعد لبدء التعلم؟",
+      "description": "انضم إلى مجتمعنا واطلق إمكاناتك الكاملة اليوم!",
+      "button": "ابدأ الآن"
+    }
+  },
+  "pages": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجل الدخول إلى حسابك",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "signInButton": "تسجيل الدخول",
+      "signingIn": "جاري تسجيل الدخول...",
+      "noAccount": "ليس لديك حساب؟",
+      "createAccount": "إنشاء حساب",
+      "backToHome": "العودة للرئيسية"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "subtitle": "انضم إلى التطبيق الذكي اليوم",
+      "fullNameLabel": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل اسمك الكامل",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "phoneLabel": "رقم الهاتف",
+      "phonePlaceholder": "أدخل رقم هاتفك",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أنشئ كلمة مرور",
+      "confirmPasswordLabel": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "أكد كلمة المرور",
+      "createAccountButton": "إنشاء حساب",
+      "creatingAccount": "جاري إنشاء الحساب...",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "signIn": "تسجيل الدخول",
+      "backToHome": "العودة للرئيسية"
+    },
+    "forgotPassword": {
+      "title": "نسيت كلمة المرور؟",
+      "subtitle": "لا تقلق، سنرسل لك تعليمات إعادة التعيين",
+      "emailLabel": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "resetButton": "إعادة تعيين كلمة المرور",
+      "sending": "جاري الإرسال...",
+      "successMessage": "إذا كان هناك حساب بهذا البريد الإلكتروني، ستتلقى تعليمات إعادة تعيين كلمة المرور.",
+      "backToSignIn": "العودة لتسجيل الدخول",
+      "backToHome": "العودة للرئيسية"
+    },
+    "adminDashboard": {
+      "title": "لوحة تحكم المدير",
+      "welcome": "مرحباً بعودتك، {{name}}!",
+      "adminPrivileges": "صلاحيات المدير",
+      "adminDescription": "لديك وصول كامل لإدارة النظام",
+      "stats": {
+        "totalCourses": "إجمالي الدورات",
+        "teachers": "المعلمون",
+        "students": "الطلاب",
+        "subjects": "المواد"
+      },
+      "actions": {
+        "userManagement": {
+          "title": "إدارة المستخدمين",
+          "description": "إدارة جميع المستخدمين والأدوار والصلاحيات",
+          "button": "إدارة المستخدمين"
+        },
+        "createTeacher": {
+          "title": "إضافة معلم",
+          "description": "إضافة معلمين جدد إلى النظام",
+          "button": "إضافة معلم"
+        },
+        "courseManagement": {
+          "title": "إدارة الدورات",
+          "description": "إدارة جميع الدورات والمحتوى",
+          "button": "عرض الدورات"
+        }
+      },
+      "backToDashboard": "العودة للوحة التحكم"
+    },
+    "studentDashboard": {
+      "title": "لوحة تحكم الطالب",
+      "welcome": "مرحباً بعودتك، {{name}}!",
+      "studentPortal": "بوابة الطالب",
+      "studentDescription": "الوصول إلى دوراتك وواجباتك ودرجاتك",
+      "stats": {
+        "availableCourses": "الدورات المتاحة",
+        "videoLessons": "دروس الفيديو",
+        "assignments": "الواجبات"
+      },
+      "actions": {
+        "browseCourses": {
+          "title": "تصفح الدورات",
+          "description": "عرض والوصول إلى جميع الدورات المتاحة",
+          "button": "عرض جميع الدورات"
+        },
+        "downloadMaterials": {
+          "title": "تحميل المواد",
+          "description": "الوصول وتحميل مواد الدورة",
+          "button": "الذهاب للمواد"
+        }
+      },
+      "quickLinks": {
+        "title": "روابط سريعة",
+        "watchVideos": "شاهد دروس الفيديو في أي وقت",
+        "downloadMaterials": "حمل مواد الدراسة",
+        "viewAssignments": "عرض واجبات الواجبات المنزلية",
+        "browse": "تصفح",
+        "access": "الوصول",
+        "view": "عرض"
+      },
+      "backToDashboard": "العودة للوحة التحكم"
+    },
+    "teacherDashboard": {
+      "title": "لوحة تحكم المعلم",
+      "welcome": "مرحباً بعودتك، {{name}}!",
+      "teacherPortal": "بوابة المعلم",
+      "teacherDescription": "إدارة فصولك وطلابك ومواد التدريس",
+      "stats": {
+        "totalCourses": "إجمالي الدورات",
+        "videoLessons": "دروس الفيديو",
+        "assignments": "الواجبات"
+      },
+      "actions": {
+        "myCourses": {
+          "title": "دوراتي",
+          "description": "عرض وإدارة جميع الدورات",
+          "button": "عرض الدورات"
+        },
+        "createCourse": {
+          "title": "إنشاء دورة",
+          "description": "رفع محتوى دورة جديد",
+          "button": "إنشاء جديد"
+        },
+        "statistics": {
+          "title": "الإحصائيات",
+          "description": "عرض تحليلات الدورة",
+          "button": "عرض الإحصائيات"
+        }
+      },
+      "backToDashboard": "العودة للوحة التحكم"
+    },
+    "courseView": {
+      "loading": "جاري تحميل الدورة...",
+      "errorTitle": "خطأ في تحميل الدورة",
+      "notFoundTitle": "الدورة غير موجودة",
+      "notFoundMessage": "الدورة التي تبحث عنها غير موجودة.",
+      "backToCourses": "العودة للدورات",
+      "goBack": "العودة",
+      "subject": "المادة",
+      "createdBy": "أنشأها",
+      "created": "تاريخ الإنشاء",
+      "description": "الوصف",
+      "mediaPlayer": "مشغل الوسائط",
+      "fileInformation": "معلومات الملف",
+      "fileName": "اسم الملف",
+      "fileSize": "حجم الملف",
+      "fileType": "نوع الملف",
+      "contentType": "نوع المحتوى",
+      "downloadFile": "تحميل الملف",
+      "viewFile": "عرض الملف",
+      "contentTypes": {
+        "video": "فيديو/صوت",
+        "material": "مادة",
+        "homework": "واجب"
+      },
+      "fileSizes": {
+        "bytes": "بايت",
+        "kb": "كيلوبايت",
+        "mb": "ميجابايت",
+        "gb": "جيجابايت"
+      }
+    }
+  },
+  "footer": {
+    "brandName": "التطبيق الذكي",
+    "brandDescription": "نُمكّن الطلاب حول العالم من خلال التعليم الجيد وأدوات التعلم المبتكرة. انضم إلينا في تحويل مستقبل التعليم.",
+    "quickLinksTitle": "روابط سريعة",
+    "links": {
+      "home": "الرئيسية",
+      "about": "من نحن",
+      "signUp": "إنشاء حساب",
+      "signIn": "تسجيل الدخول"
+    },
+    "resourcesTitle": "الموارد",
+    "resources": {
+      "helpCenter": "مركز المساعدة",
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsOfService": "شروط الخدمة",
+      "contactUs": "اتصل بنا"
+    },
+    "contactTitle": "تواصل معنا",
+    "contact": {
+      "address": "123 شارع التعليم، مدينة التعلم",
+      "email": "info@smartapp.com",
+      "phone": "+1 (555) 123-4567"
+    },
+    "bottom": {
+      "copyright": "  التطبيق الذكي. جميع الحقوق محفوظة.",
+      "madeWithLove": "صُنع بـ",
+      "forStudents": "من أجل الطلاب"
+    }
+  },
+  "chatbot": {
+    "title": "المساعد الذكي",
+    "subtitle": "كيف يمكنني مساعدتك اليوم؟",
+    "welcomeMessage": "مرحباً! أنا مساعدك الذكي. يمكنني مساعدتك في الأسئلة حول منصتنا أو الدورات أو أي موضوع آخر. ماذا تريد أن تعرف؟",
+    "placeholder": "اكتب رسالتك هنا...",
+    "inputHint": "اضغط Enter للإرسال، Shift+Enter لسطر جديد",
+    "sendMessage": "إرسال الرسالة",
+    "openChat": "فتح المحادثة",
+    "close": "إغلاق المحادثة",
+    "clearChat": "مسح المحادثة",
+    "error": "خطأ",
+    "errorMessage": "عذراً، أواجه مشكلة في الرد الآن. يرجى المحاولة مرة أخرى لاحقاً.",
+    "typing": "الذكاء الاصطناعي يكتب...",
+    "noResponse": "لم يتم استلام رد من الذكاء الاصطناعي.",
+    "suggestions": {
+      "title": "جرب السؤال عن:",
+      "questions": [
+        "ما هي الدورات المتاحة؟",
+        "كيف أسجل في دورة؟",
+        "ما هو منصة التعلم؟",
+        "كيف يمكنني التواصل مع الدعم؟"
+      ]
+    }
+  }
+}

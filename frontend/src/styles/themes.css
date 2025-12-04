@@ -1,0 +1,373 @@
+/* Light Theme (Default) */
+:root {
+  /* Primary Colors */
+  --primary-color: #667eea;
+  --primary-hover: #5a6fd8;
+  --primary-light: #e8ecff;
+  --primary-dark: #4c63d2;
+  
+  /* Secondary Colors */
+  --secondary-color: #764ba2;
+  --secondary-hover: #6a4190;
+  --secondary-light: #f0e6ff;
+  --secondary-dark: #5e3a7e;
+  
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --bg-card: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.1);
+  
+  /* Text Colors */
+  --text-primary: #2c3e50;
+  --text-secondary: #6c757d;
+  --text-muted: #868e96;
+  --text-light: #adb5bd;
+  --text-white: #ffffff;
+  
+  /* Border Colors */
+  --border-color: #dee2e6;
+  --border-light: #e9ecef;
+  --border-dark: #ced4da;
+  
+  /* Status Colors */
+  --success-color: #28a745;
+  --success-light: #d4edda;
+  --success-dark: #1e7e34;
+  
+  --danger-color: #dc3545;
+  --danger-light: #f8d7da;
+  --danger-dark: #c82333;
+  
+  --warning-color: #ffc107;
+  --warning-light: #fff3cd;
+  --warning-dark: #e0a800;
+  
+  --info-color: #17a2b8;
+  --info-light: #d1ecf1;
+  --info-dark: #138496;
+  
+  /* Shadow Colors */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  
+  /* Input Colors */
+  --input-bg: #ffffff;
+  --input-border: #ced4da;
+  --input-focus: #667eea;
+  --input-placeholder: #6c757d;
+  
+  /* Navbar Colors */
+  --navbar-bg: #ffffff;
+  --navbar-text: #2c3e50;
+  --navbar-border: #dee2e6;
+  --navbar-hover: #f8f9fa;
+  
+  /* Dropdown Colors */
+  --dropdown-bg: #ffffff;
+  --dropdown-border: #dee2e6;
+  --dropdown-hover: #f8f9fa;
+  --dropdown-text: #2c3e50;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  /* Primary Colors */
+  --primary-color: #7c8ef0;
+  --primary-hover: #6b7de8;
+  --primary-light: #2a2d3a;
+  --primary-dark: #5a6fd8;
+  
+  /* Secondary Colors */
+  --secondary-color: #8b5fbf;
+  --secondary-hover: #7a4eae;
+  --secondary-light: #3a2d4a;
+  --secondary-dark: #6a4190;
+  
+  /* Background Colors */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3a3a3a;
+  --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  --bg-card: #2d2d2d;
+  --bg-overlay: rgba(255, 255, 255, 0.1);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #888888;
+  --text-light: #666666;
+  --text-white: #ffffff;
+  
+  /* Border Colors */
+  --border-color: #404040;
+  --border-light: #3a3a3a;
+  --border-dark: #4a4a4a;
+  
+  /* Status Colors */
+  --success-color: #4caf50;
+  --success-light: #2d4a2f;
+  --success-dark: #3d8b40;
+  
+  --danger-color: #f44336;
+  --danger-light: #4a2d2f;
+  --danger-dark: #d32f2f;
+  
+  --warning-color: #ff9800;
+  --warning-light: #4a3d2d;
+  --warning-dark: #f57c00;
+  
+  --info-color: #2196f3;
+  --info-light: #2d3a4a;
+  --info-dark: #1976d2;
+  
+  /* Shadow Colors */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+  
+  /* Input Colors */
+  --input-bg: #3a3a3a;
+  --input-border: #404040;
+  --input-focus: #7c8ef0;
+  --input-placeholder: #888888;
+  
+  /* Navbar Colors */
+  --navbar-bg: #2d2d2d;
+  --navbar-text: #ffffff;
+  --navbar-border: #404040;
+  --navbar-hover: #3a3a3a;
+  
+  /* Dropdown Colors */
+  --dropdown-bg: #2d2d2d;
+  --dropdown-border: #404040;
+  --dropdown-hover: #3a3a3a;
+  --dropdown-text: #ffffff;
+}
+
+/* Global Theme Styles */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.card-header {
+  background-color: var(--bg-secondary);
+  border-bottom-color: var(--border-color);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  border-color: var(--primary-color);
+  color: var(--text-white);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--secondary-hover) 100%);
+  border-color: var(--primary-hover);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--text-white);
+}
+
+/* Form Styles */
+.form-control {
+  background-color: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+
+.form-control:focus {
+  background-color: var(--input-bg);
+  border-color: var(--input-focus);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.2rem rgba(124, 142, 240, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--input-placeholder);
+}
+
+.form-label {
+  color: var(--text-primary);
+}
+
+/* Alert Styles */
+.alert-primary {
+  background-color: var(--primary-light);
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+.alert-success {
+  background-color: var(--success-light);
+  border-color: var(--success-color);
+  color: var(--text-primary);
+}
+
+.alert-danger {
+  background-color: var(--danger-light);
+  border-color: var(--danger-color);
+  color: var(--text-primary);
+}
+
+.alert-info {
+  background-color: var(--info-light);
+  border-color: var(--info-color);
+  color: var(--text-primary);
+}
+
+.alert-warning {
+  background-color: var(--warning-light);
+  border-color: var(--warning-color);
+  color: var(--text-primary);
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: var(--navbar-bg) !important;
+  border-bottom: 1px solid var(--navbar-border);
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: var(--navbar-text) !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--primary-color) !important;
+}
+
+/* Dropdown Styles */
+.dropdown-menu {
+  background-color: var(--dropdown-bg);
+  border-color: var(--dropdown-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.dropdown-item {
+  color: var(--dropdown-text);
+}
+
+.dropdown-item:hover {
+  background-color: var(--dropdown-hover);
+  color: var(--dropdown-text);
+}
+
+/* Badge Styles */
+.badge {
+  color: var(--text-white);
+}
+
+/* Text Utilities */
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Background Utilities */
+.bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.bg-success {
+  background-color: var(--success-color) !important;
+}
+
+.bg-danger {
+  background-color: var(--danger-color) !important;
+}
+
+.bg-warning {
+  background-color: var(--warning-color) !important;
+}
+
+.bg-info {
+  background-color: var(--info-color) !important;
+}
+
+/* Border Utilities */
+.border {
+  border-color: var(--border-color) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
+/* Spinner Styles */
+.spinner-border {
+  color: var(--primary-color);
+}
+
+/* Custom Gradient Backgrounds */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+.bg-gradient-light {
+  background: var(--bg-gradient);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* RTL Support for Dark Theme */
+[dir="rtl"][data-theme="dark"] {
+  /* RTL-specific dark theme adjustments if needed */
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
