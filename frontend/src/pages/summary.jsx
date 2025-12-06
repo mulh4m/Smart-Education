@@ -1,12 +1,17 @@
 // frontend/src/pages/summary.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { selectUserRole } from "../store/slices/authSlice";
 
 // Backend URL – your server runs on port 5000
 const SUMMARY_API_URL = "http://localhost:5000/api/summarize";
 
 const Summary = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const userRole = useSelector(selectUserRole);
 
   const [activeInput, setActiveInput] = useState("text"); // "text" | "pdf"
   const [inputText, setInputText] = useState("");
@@ -127,11 +132,38 @@ const Summary = () => {
     },
   ];
 
+  const handleBackToDashboard = () => {
+    switch(userRole) {
+      case 'admin':
+        navigate('/admin/dashboard');
+        break;
+      case 'teacher':
+        navigate('/teacher/dashboard');
+        break;
+      case 'student':
+        navigate('/student/dashboard');
+        break;
+      default:
+        navigate('/');
+    }
+  };
+
   return (
-    <div className="min-vh-100 bg-gradient-light">
+    <div className="min-vh-100 bg-gradient-light d-flex align-items-center">
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12">
+            {/* Back to Dashboard Button */}
+            <div className="mb-4">
+              <button
+                onClick={handleBackToDashboard}
+                className="btn btn-outline-primary"
+              >
+                <i className="bi bi-arrow-left me-2"></i>
+                {t("pages.summary.backToDashboard", "Back to Dashboard")}
+              </button>
+            </div>
+
             <div className="card shadow-lg border-0 rounded-4">
               <div className="card-body p-5">
                 {/* Page Header */}
@@ -152,14 +184,14 @@ const Summary = () => {
                   {/* Left: Inputs */}
                   <div className="col-lg-6">
                     <div className="mb-3">
-                      <div className="d-flex justify-content-between align-items-center mb-2">
-                        <h5 className="mb-0 fw-semibold">
+                      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
+                        <h5 className="mb-0 fw-semibold text-dark">
                           {t(
                             "pages.summary.inputTitle",
                             "Choose input type"
                           )}
                         </h5>
-                        <span className="badge bg-primary bg-opacity-10 text-primary">
+                        <span className="badge bg-primary text-white px-3 py-2" style={{ fontSize: "0.85rem" }}>
                           <i className="bi bi-cpu-fill me-1"></i>
                           {t(
                             "pages.summary.offlineBadge",

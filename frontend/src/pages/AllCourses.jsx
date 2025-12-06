@@ -167,7 +167,7 @@ const AllCourses = () => {
         background: "var(--bg-gradient)",
       }}
     >
-      <div className="container">
+      <div className="container" style={{ marginTop: "4rem", paddingBottom: "3rem" }}>
         {/* Page Header */}
         <div className="text-center mb-5">
           <h1 className="display-4 fw-bold mb-3 text-primary">
