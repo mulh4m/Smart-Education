@@ -178,14 +178,12 @@ const Profile = () => {
   const handleProfileSubmit = (e) => {
     e.preventDefault();
     if (validateProfileForm()) {
-      // Only send changed fields
+      // Only send changed fields (exclude email as it cannot be changed)
       const changedFields = {};
       if (profileData.fullName !== user.fullName) {
         changedFields.fullName = profileData.fullName;
       }
-      if (profileData.email !== user.email) {
-        changedFields.email = profileData.email;
-      }
+      // Email is disabled, so we don't include it in the update
       if (profileData.phone !== user.phone) {
         changedFields.phone = profileData.phone;
       }
@@ -313,7 +311,9 @@ const Profile = () => {
                             value={profileData.email}
                             onChange={handleProfileChange}
                             placeholder="Enter your email address"
+                            disabled
                           />
+                          <small className="text-muted">Email cannot be changed</small>
                           {profileErrors.email && (
                             <div className="invalid-feedback">{profileErrors.email}</div>
                           )}

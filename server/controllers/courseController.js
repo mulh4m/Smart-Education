@@ -275,13 +275,39 @@ exports.updateCourse = async (req, res) => {
         });
       }
 
+      // Find sections that are being deleted (exist in course but not in new list)
+      const existingSectionIds = course.contentSections
+        .filter(s => s._id)
+        .map(s => s._id.toString());
+      const newSectionIds = parsedContentSections
+        .filter(s => s._id)
+        .map(s => s._id.toString());
+      
+      const deletedSectionIds = existingSectionIds.filter(id => !newSectionIds.includes(id));
+      
+      // Delete files from deleted sections
+      deletedSectionIds.forEach(sectionId => {
+        const deletedSection = course.contentSections.find(
+          s => s._id && s._id.toString() === sectionId
+        );
+        if (deletedSection && deletedSection.files && deletedSection.files.length > 0) {
+          deletedSection.files.forEach((file) => {
+            const filePath = path.join(__dirname, "..", "public", file.url);
+            deleteFile(filePath);
+          });
+        }
+      });
+
       // If new files are uploaded, process them
       if (req.files && req.files.length > 0) {
         let fileIndex = 0;
         const updatedSections = parsedContentSections.map((section) => {
-          const existingSection = course.contentSections.find(
-            s => s._id && s._id.toString() === section._id
-          );
+          // Find existing section by _id if it exists
+          const existingSection = section._id 
+            ? course.contentSections.find(
+                s => s._id && s._id.toString() === section._id.toString()
+              )
+            : null;
 
           if (section.hasNewFiles && fileIndex < req.files.length) {
             // Add new files to this section
@@ -300,13 +326,18 @@ exports.updateCourse = async (req, res) => {
             }
 
             return {
-              ...section,
+              contentType: section.contentType,
+              title: section.title,
+              description: section.description || "",
               files: [...(existingSection?.files || []), ...newFiles],
             };
           }
 
+          // No new files, keep existing files or empty array for new sections
           return {
-            ...section,
+            contentType: section.contentType,
+            title: section.title,
+            description: section.description || "",
             files: existingSection?.files || [],
           };
         });
@@ -315,12 +346,16 @@ exports.updateCourse = async (req, res) => {
       } else {
         // No new files, just update section metadata
         course.contentSections = parsedContentSections.map((section) => {
-          const existingSection = course.contentSections.find(
-            s => s._id && s._id.toString() === section._id
-          );
+          const existingSection = section._id 
+            ? course.contentSections.find(
+                s => s._id && s._id.toString() === section._id.toString()
+              )
+            : null;
           
           return {
-            ...section,
+            contentType: section.contentType,
+            title: section.title,
+            description: section.description || "",
             files: existingSection?.files || [],
           };
         });
@@ -1080,10 +1115,19 @@ exports.downloadCourseFile = async (req, res) => {
     }
 
     const file = section.files[fIndex];
-    const filePath = path.join(__dirname, "..", "public", file.url);
+    
+    // Construct file path - file.url is like "/uploads/materials/filename"
+    // Remove leading slash to avoid absolute path issues
+    const urlPath = file.url.startsWith('/') ? file.url.substring(1) : file.url;
+    // Use path.resolve for absolute path (more reliable than path.join)
+    const filePath = path.resolve(__dirname, "..", "public", urlPath);
 
     // Check if file exists
     if (!fs.existsSync(filePath)) {
+      console.error("Download file not found:", {
+        fileUrl: file.url,
+        constructedPath: filePath
+      });
       return res.status(404).json({
         status: "error",
         message: "File not found on server",
@@ -1108,6 +1152,156 @@ exports.downloadCourseFile = async (req, res) => {
     res.status(500).json({
       status: "error",
       message: error.message || "Error downloading file",
+    });
+  }
+};
+
+/**
+ * @desc    View course file (inline)
+ * @route   GET /api/courses/view/:courseId/:sectionIndex/:fileIndex
+ * @access  Private (token can be in query string for iframe access)
+ */
+exports.viewCourseFile = async (req, res) => {
+  try {
+    const { courseId, sectionIndex, fileIndex } = req.params;
+    
+    // Note: Authentication is handled by the protect middleware
+    // which checks Authorization header. For iframe access,
+    // the frontend should include the token in the URL query string
+    // and we verify it here as a fallback
+
+    // Find the course
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({
+        status: "error",
+        message: "Course not found",
+      });
+    }
+
+    // Validate section index
+    const secIndex = parseInt(sectionIndex);
+    if (isNaN(secIndex) || secIndex < 0 || secIndex >= course.contentSections.length) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid section index",
+      });
+    }
+
+    const section = course.contentSections[secIndex];
+
+    // Validate file index
+    const fIndex = parseInt(fileIndex);
+    if (isNaN(fIndex) || fIndex < 0 || fIndex >= section.files.length) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid file index",
+      });
+    }
+
+    const file = section.files[fIndex];
+    
+    // Construct file path - file.url is like "/uploads/materials/filename"
+    // Remove leading slash to avoid absolute path issues with path.join
+    const urlPath = file.url.startsWith('/') ? file.url.substring(1) : file.url;
+    
+    // Use path.resolve to get absolute path, which is more reliable
+    const filePath = path.resolve(__dirname, "..", "public", urlPath);
+
+    // Debug logging (remove in production)
+    console.log("View file request:", {
+      courseId,
+      sectionIndex: secIndex,
+      fileIndex: fIndex,
+      fileUrl: file.url,
+      urlPath: urlPath,
+      constructedPath: filePath,
+      fileExists: fs.existsSync(filePath)
+    });
+
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      // Try alternative path (with leading slash, in case path.join handles it differently)
+      const altPath = path.resolve(__dirname, "..", "public", file.url);
+      if (fs.existsSync(altPath)) {
+        // Use the alternative path
+        const stats = fs.statSync(altPath);
+        res.setHeader('Content-Disposition', `inline; filename="${file.originalFileName}"`);
+        res.setHeader('Content-Type', file.mimeType || 'application/octet-stream');
+        res.setHeader('Content-Length', stats.size);
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        const fileStream = fs.createReadStream(altPath);
+        return fileStream.pipe(res);
+      }
+      
+      // Try one more time with normalized path (resolve to absolute)
+      const normalizedPath = path.resolve(__dirname, "..", "public", urlPath);
+      if (fs.existsSync(normalizedPath)) {
+        const stats = fs.statSync(normalizedPath);
+        res.setHeader('Content-Disposition', `inline; filename="${file.originalFileName}"`);
+        res.setHeader('Content-Type', file.mimeType || 'application/octet-stream');
+        res.setHeader('Content-Length', stats.size);
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        const fileStream = fs.createReadStream(normalizedPath);
+        return fileStream.pipe(res);
+      }
+      
+      console.error("File not found - all attempts failed:", {
+        fileUrl: file.url,
+        urlPath: urlPath,
+        constructedPath: filePath,
+        alternativePath: altPath,
+        normalizedPath: normalizedPath,
+        publicDir: path.join(__dirname, "..", "public"),
+        publicDirExists: fs.existsSync(path.join(__dirname, "..", "public")),
+        __dirname: __dirname
+      });
+      
+      // List files in the expected directory for debugging
+      const expectedDir = path.dirname(filePath);
+      try {
+        if (fs.existsSync(expectedDir)) {
+          const filesInDir = fs.readdirSync(expectedDir);
+          console.error("Files in expected directory:", filesInDir);
+        } else {
+          console.error("Expected directory does not exist:", expectedDir);
+        }
+      } catch (err) {
+        console.error("Error reading directory:", err.message);
+      }
+      
+      return res.status(404).json({
+        status: "error",
+        message: "File not found on server",
+        debug: {
+          fileUrl: file.url,
+          urlPath: urlPath,
+          constructedPath: filePath,
+          alternativePath: altPath,
+          normalizedPath: normalizedPath
+        }
+      });
+    }
+
+    // Get file stats
+    const stats = fs.statSync(filePath);
+
+    // Set headers for inline viewing (not download)
+    res.setHeader('Content-Disposition', `inline; filename="${file.originalFileName}"`);
+    res.setHeader('Content-Type', file.mimeType || 'application/octet-stream');
+    res.setHeader('Content-Length', stats.size);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+
+    // Stream the file
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
+
+  } catch (error) {
+    console.error("View file error:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Error viewing file",
     });
   }
 };

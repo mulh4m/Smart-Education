@@ -314,7 +314,8 @@
       "contentTypes": {
         "video": "فيديو/صوت",
         "material": "مادة",
-        "homework": "واجب"
+        "homework": "واجب",
+        "activity": "نشاط"
       },
       "fileSizes": {
         "bytes": "بايت",

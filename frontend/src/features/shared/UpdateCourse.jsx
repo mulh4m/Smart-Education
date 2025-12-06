@@ -21,10 +21,10 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
     title: course?.title || "",
     description: course?.description || "",
     subject: course?.subject || "",
-    contentType: course?.contentType || "video",
   });
 
-  const [fileInputs, setFileInputs] = useState([{ id: 1, file: null }]);
+  // Initialize content sections from course data
+  const [contentSections, setContentSections] = useState([]);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -33,8 +33,32 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
         title: course.title || "",
         description: course.description || "",
         subject: course.subject || "",
-        contentType: course.contentType || "video",
       });
+
+      // Initialize sections from existing course
+      if (course.contentSections && course.contentSections.length > 0) {
+        const sections = course.contentSections.map((section) => ({
+          _id: section._id ? section._id.toString() : undefined,
+          contentType: section.contentType || "video",
+          title: section.title || "",
+          description: section.description || "",
+          existingFiles: section.files || [],
+          newFiles: [{ id: 1, file: null }],
+        }));
+        setContentSections(sections);
+      } else {
+        // If no sections exist, create one empty section
+        setContentSections([
+          {
+            _id: `new-${Date.now()}`,
+            contentType: "video",
+            title: "",
+            description: "",
+            existingFiles: [],
+            newFiles: [{ id: 1, file: null }],
+          },
+        ]);
+      }
     }
   }, [course]);
 
@@ -77,6 +101,17 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
       newErrors.subject = "Subject is required";
     }
 
+    // Validate content sections
+    contentSections.forEach((section, index) => {
+      if (!section.title.trim()) {
+        newErrors[`section_${index}_title`] = "Section title is required";
+      }
+    });
+
+    if (contentSections.length === 0) {
+      newErrors.sections = "Please add at least one content section";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -94,37 +129,94 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
         [name]: "",
       }));
     }
-    // Reset file inputs when content type changes
-    if (name === "contentType") {
-      setFileInputs([{ id: 1, file: null }]);
+  };
+
+  const handleSectionChange = (sectionId, field, value) => {
+    setContentSections((prev) =>
+      prev.map((section) =>
+        section._id === sectionId ? { ...section, [field]: value } : section
+      )
+    );
+    
+    // Clear error for this field
+    const sectionIndex = contentSections.findIndex(s => s._id === sectionId);
+    const errorKey = `section_${sectionIndex}_${field}`;
+    if (errors[errorKey]) {
+      setErrors((prev) => ({
+        ...prev,
+        [errorKey]: "",
+      }));
     }
   };
 
-  const handleFileChange = (id, e) => {
+  const handleFileChange = (sectionId, fileId, e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileInputs((prev) =>
-        prev.map((input) =>
-          input.id === id ? { ...input, file } : input
+      setContentSections((prev) =>
+        prev.map((section) =>
+          section._id === sectionId
+            ? {
+                ...section,
+                newFiles: section.newFiles.map((fileInput) =>
+                  fileInput.id === fileId ? { ...fileInput, file } : fileInput
+                ),
+              }
+            : section
         )
       );
-      if (errors.files) {
-        setErrors((prev) => ({
-          ...prev,
-          files: "",
-        }));
-      }
     }
   };
 
-  const addFileInput = () => {
-    const newId = Math.max(...fileInputs.map((input) => input.id), 0) + 1;
-    setFileInputs((prev) => [...prev, { id: newId, file: null }]);
+  const addFileInput = (sectionId) => {
+    setContentSections((prev) =>
+      prev.map((section) =>
+        section._id === sectionId
+          ? {
+              ...section,
+              newFiles: [
+                ...section.newFiles,
+                {
+                  id: Math.max(...section.newFiles.map((f) => f.id), 0) + 1,
+                  file: null,
+                },
+              ],
+            }
+          : section
+      )
+    );
   };
 
-  const removeFileInput = (id) => {
-    if (fileInputs.length > 1) {
-      setFileInputs((prev) => prev.filter((input) => input.id !== id));
+  const removeFileInput = (sectionId, fileId) => {
+    setContentSections((prev) =>
+      prev.map((section) =>
+        section._id === sectionId && section.newFiles.length > 1
+          ? {
+              ...section,
+              newFiles: section.newFiles.filter((file) => file.id !== fileId),
+            }
+          : section
+      )
+    );
+  };
+
+  const addContentSection = () => {
+    const newId = `new-${Date.now()}`;
+    setContentSections((prev) => [
+      ...prev,
+      {
+        _id: newId,
+        contentType: "video",
+        title: "",
+        description: "",
+        existingFiles: [],
+        newFiles: [{ id: 1, file: null }],
+      },
+    ]);
+  };
+
+  const removeContentSection = (sectionId) => {
+    if (contentSections.length > 1) {
+      setContentSections((prev) => prev.filter((section) => section._id !== sectionId));
     }
   };
 
@@ -136,21 +228,42 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("subject", formData.subject);
-      data.append("contentType", formData.contentType);
-      
-      // Append all selected files from all inputs (optional for updates)
-      fileInputs.forEach((input) => {
-        if (input.file) {
-          data.append("content", input.file);
+
+      // Prepare content sections data
+      const sectionsData = contentSections.map((section) => {
+        const sectionData = {
+          contentType: section.contentType,
+          title: section.title,
+          description: section.description,
+          newFileCount: section.newFiles.filter((f) => f.file !== null).length,
+          hasNewFiles: section.newFiles.some((f) => f.file !== null),
+        };
+        
+        // Only include _id for existing sections (not new ones)
+        if (section._id && !section._id.toString().startsWith('new-') && !section._id.toString().startsWith('existing-')) {
+          sectionData._id = section._id;
         }
+        
+        return sectionData;
+      });
+
+      data.append("contentSections", JSON.stringify(sectionsData));
+
+      // Append all selected files from all sections
+      contentSections.forEach((section) => {
+        section.newFiles.forEach((fileInput) => {
+          if (fileInput.file) {
+            data.append("content", fileInput.file);
+          }
+        });
       });
 
       dispatch(updateCourse({ id: course._id, formData: data, token }));
     }
   };
 
-  const getAcceptedFileTypes = () => {
-    switch (formData.contentType) {
+  const getAcceptedFileTypes = (contentType) => {
+    switch (contentType) {
       case "video":
         return ".mp4,.avi,.mov,.wmv,.mkv,.flv,.webm,.mp3,.wav,.ogg,.m4a";
       case "material":
@@ -163,8 +276,8 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
     }
   };
 
-  const getFileTypeLabel = () => {
-    switch (formData.contentType) {
+  const getFileTypeLabel = (contentType) => {
+    switch (contentType) {
       case "video":
         return "Video/Audio File (Max: 100MB)";
       case "material":
@@ -184,7 +297,7 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
 
   return (
     <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-      <div className="modal-dialog modal-xl">
+      <div className="modal-dialog modal-xl modal-dialog-scrollable">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
@@ -295,90 +408,183 @@ const UpdateCourse = ({ course, onSuccess, onCancel }) => {
                   )}
                 </div>
 
-                <div className="col-md-6 mb-3">
-                  <label
-                    htmlFor="contentType"
-                    className="form-label fw-semibold"
-                  >
-                    Content Type <span className="text-danger">*</span>
-                  </label>
-                  <select
-                    className="form-select"
-                    id="contentType"
-                    name="contentType"
-                    value={formData.contentType}
-                    onChange={handleChange}
-                  >
-                    <option value="video">Video</option>
-                    <option value="material">Material</option>
-                    <option value="homework">Homework</option>
-                    <option value="activity">Activity</option>
-                  </select>
-                </div>
+                <div className="col-12 mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <label className="form-label fw-semibold mb-0">
+                      Content Sections <span className="text-danger">*</span>
+                    </label>
+                    <button
+                      type="button"
+                      className="btn btn-outline-success btn-sm"
+                      onClick={addContentSection}
+                    >
+                      <i className="bi bi-plus-circle me-1"></i>
+                      Add Section
+                    </button>
+                  </div>
+                  
+                  {errors.sections && (
+                    <div className="alert alert-danger">{errors.sections}</div>
+                  )}
 
-                <div className="col-12 mb-3">
-                  <label className="form-label fw-semibold">
-                    {getFileTypeLabel()} <span className="text-muted">(Optional - leave empty to keep existing files)</span>
-                  </label>
-                  {fileInputs.map((input, index) => (
-                    <div key={input.id} className="mb-3">
-                      <div className="d-flex gap-2 align-items-end">
-                        <div className="flex-grow-1">
-                          <input
-                            type="file"
-                            className="form-control"
-                            id={`content-${input.id}`}
-                            onChange={(e) => handleFileChange(input.id, e)}
-                            accept={getAcceptedFileTypes()}
-                          />
-                          {input.file && (
-                            <small className="text-muted d-block mt-1">
-                              Selected: {input.file.name} (
-                              {(input.file.size / (1024 * 1024)).toFixed(2)}{" "}
-                              MB)
-                            </small>
-                          )}
-                        </div>
-                        {fileInputs.length > 1 && (
+                  {contentSections.map((section, sectionIndex) => (
+                    <div key={section._id} className="card mb-3 border-primary">
+                      <div className="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h6 className="mb-0 fw-semibold">
+                          Section {sectionIndex + 1}
+                        </h6>
+                        {contentSections.length > 1 && (
                           <button
                             type="button"
-                            className="btn btn-outline-danger"
-                            onClick={() => removeFileInput(input.id)}
-                            title="Remove this file field"
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => removeContentSection(section._id)}
+                            title="Delete this section"
                           >
                             <i className="bi bi-trash"></i>
                           </button>
                         )}
                       </div>
+                      <div className="card-body">
+                        <div className="row">
+                          <div className="col-md-6 mb-3">
+                            <label className="form-label fw-semibold">
+                              Content Type <span className="text-danger">*</span>
+                            </label>
+                            <select
+                              className="form-select"
+                              value={section.contentType}
+                              onChange={(e) =>
+                                handleSectionChange(
+                                  section._id,
+                                  "contentType",
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="video">Video</option>
+                              <option value="material">Material</option>
+                              <option value="homework">Homework</option>
+                              <option value="activity">Activity</option>
+                            </select>
+                          </div>
+                          <div className="col-md-6 mb-3">
+                            <label className="form-label fw-semibold">
+                              Section Title <span className="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              className={`form-control ${
+                                errors[`section_${sectionIndex}_title`] ? "is-invalid" : ""
+                              }`}
+                              value={section.title}
+                              onChange={(e) =>
+                                handleSectionChange(
+                                  section._id,
+                                  "title",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Enter section title"
+                            />
+                            {errors[`section_${sectionIndex}_title`] && (
+                              <div className="invalid-feedback">
+                                {errors[`section_${sectionIndex}_title`]}
+                              </div>
+                            )}
+                          </div>
+                          <div className="col-12 mb-3">
+                            <label className="form-label fw-semibold">
+                              Section Description
+                            </label>
+                            <textarea
+                              className="form-control"
+                              rows="2"
+                              value={section.description}
+                              onChange={(e) =>
+                                handleSectionChange(
+                                  section._id,
+                                  "description",
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Enter section description (optional)"
+                            ></textarea>
+                          </div>
+
+                          {/* Existing Files */}
+                          {section.existingFiles && section.existingFiles.length > 0 && (
+                            <div className="col-12 mb-3">
+                              <label className="form-label fw-semibold">
+                                Existing Files:
+                              </label>
+                              <div className="border rounded p-3 bg-light">
+                                {section.existingFiles.map((file, fileIndex) => (
+                                  <div key={fileIndex} className="d-flex align-items-center mb-2">
+                                    <i className="bi bi-file-earmark text-primary me-2"></i>
+                                    <span className="me-2">{file.originalFileName}</span>
+                                    <small className="text-muted">
+                                      ({(file.fileSize / (1024 * 1024)).toFixed(2)} MB)
+                                    </small>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* New Files Input */}
+                          <div className="col-12">
+                            <label className="form-label fw-semibold">
+                              {getFileTypeLabel(section.contentType)}{" "}
+                              <span className="text-muted">(Optional - leave empty to keep existing files)</span>
+                            </label>
+                            {section.newFiles.map((fileInput, fileIndex) => (
+                              <div key={fileInput.id} className="mb-3">
+                                <div className="d-flex gap-2 align-items-end">
+                                  <div className="flex-grow-1">
+                                    <input
+                                      type="file"
+                                      className="form-control"
+                                      onChange={(e) =>
+                                        handleFileChange(section._id, fileInput.id, e)
+                                      }
+                                      accept={getAcceptedFileTypes(section.contentType)}
+                                    />
+                                    {fileInput.file && (
+                                      <small className="text-muted d-block mt-1">
+                                        Selected: {fileInput.file.name} (
+                                        {(fileInput.file.size / (1024 * 1024)).toFixed(2)} MB)
+                                      </small>
+                                    )}
+                                  </div>
+                                  {section.newFiles.length > 1 && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-outline-danger btn-sm"
+                                      onClick={() =>
+                                        removeFileInput(section._id, fileInput.id)
+                                      }
+                                      title="Remove this file field"
+                                    >
+                                      <i className="bi bi-trash"></i>
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                            <button
+                              type="button"
+                              className="btn btn-outline-primary btn-sm"
+                              onClick={() => addFileInput(section._id)}
+                            >
+                              <i className="bi bi-plus-circle me-1"></i>
+                              Add Another File
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ))}
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={addFileInput}
-                  >
-                    <i className="bi bi-plus-circle me-1"></i>
-                    Add Another File
-                  </button>
                 </div>
-
-                {/* Display current files */}
-                {course.contentFiles && course.contentFiles.length > 0 && (
-                  <div className="col-12 mb-3">
-                    <label className="form-label fw-semibold">Current Files:</label>
-                    <div className="border rounded p-3 bg-light">
-                      {course.contentFiles.map((file, index) => (
-                        <div key={index} className="d-flex align-items-center mb-2">
-                          <i className="bi bi-file-earmark text-primary me-2"></i>
-                          <span className="me-2">{file.originalFileName}</span>
-                          <small className="text-muted">
-                            ({(file.fileSize / (1024 * 1024)).toFixed(2)} MB)
-                          </small>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </form>
           </div>

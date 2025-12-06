@@ -243,7 +243,9 @@ const UserManagement = () => {
                         <button
                           className="btn btn-outline-danger"
                           onClick={() => handleDeleteUser(user._id)}
-                          title="Delete User"
+                          title={user.role === "admin" ? "Cannot delete admin accounts" : "Delete User"}
+                          disabled={user.role === "admin"}
+                          style={user.role === "admin" ? { opacity: 0.5, cursor: "not-allowed" } : {}}
                         >
                           <i className="bi bi-trash"></i>
                         </button>

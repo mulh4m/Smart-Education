@@ -315,7 +315,8 @@
       "contentTypes": {
         "video": "Video/Audio",
         "material": "Material",
-        "homework": "Homework"
+        "homework": "Homework",
+        "activity": "Activity"
       },
       "fileSizes": {
         "bytes": "Bytes",

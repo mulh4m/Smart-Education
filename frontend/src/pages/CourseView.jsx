@@ -32,6 +32,7 @@ const CourseView = () => {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [lightboxFile, setLightboxFile] = useState(null);
+  const [lightboxFileIndices, setLightboxFileIndices] = useState(null);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
@@ -39,6 +40,7 @@ const CourseView = () => {
   const [grade, setGrade] = useState("");
   const [feedback, setFeedback] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+  const [openSections, setOpenSections] = useState(new Set());
 
   const mySubmission = useSelector(selectMySubmission);
   const submissions = useSelector(selectSubmissions);
@@ -186,6 +188,18 @@ const CourseView = () => {
     return mimeType.startsWith("video/") || mimeType.startsWith("audio/");
   };
 
+  const toggleSection = (sectionIndex) => {
+    setOpenSections((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionIndex)) {
+        newSet.delete(sectionIndex);
+      } else {
+        newSet.add(sectionIndex);
+      }
+      return newSet;
+    });
+  };
+
   const canViewInLightbox = (mimeType) => {
     if (!mimeType) return false;
     return (
@@ -204,15 +218,38 @@ const CourseView = () => {
     );
   };
 
-  const getViewerUrl = (file) => {
-    const fileUrl = `${import.meta.env.VITE_BACKEND_URL}${file.url}`;
-
-    // For PDFs, use direct URL
-    if (file.mimeType === "application/pdf") {
-      return fileUrl;
+  const getViewerUrl = (file, sectionIndex, fileIndex) => {
+    // If we have indices, use the API view route (for course files)
+    if (sectionIndex !== undefined && fileIndex !== undefined && id && token) {
+      // Include token in query string for iframe access (since iframes can't send headers)
+      const viewUrl = `${import.meta.env.VITE_BACKEND_URL}/api/courses/view/${id}/${sectionIndex}/${fileIndex}?token=${encodeURIComponent(token)}`;
+      
+      // For Office documents, use Google Docs Viewer with the API URL
+      if (
+        file.mimeType.includes("presentation") ||
+        file.mimeType.includes("wordprocessing") ||
+        file.mimeType.includes("spreadsheet") ||
+        file.mimeType.includes("msword") ||
+        file.mimeType.includes("ms-excel") ||
+        file.mimeType.includes("ms-powerpoint")
+      ) {
+        return `https://docs.google.com/viewer?url=${encodeURIComponent(
+          viewUrl
+        )}&embedded=true`;
+      }
+      
+      // For PDFs, images, and text files, use the API view route directly
+      return viewUrl;
     }
 
-    // For Office documents, use Google Docs Viewer
+    // For submission files or when indices are not available, use direct URL
+    // Check if file.url already includes the full URL
+    if (file.url && file.url.startsWith('http')) {
+      return file.url;
+    }
+    const fileUrl = `${import.meta.env.VITE_BACKEND_URL}${file.url || ''}`;
+    
+    // For Office documents with direct URL, use Google Docs Viewer
     if (
       file.mimeType.includes("presentation") ||
       file.mimeType.includes("wordprocessing") ||
@@ -225,17 +262,7 @@ const CourseView = () => {
         fileUrl
       )}&embedded=true`;
     }
-
-    // For images, use direct URL
-    if (file.mimeType.startsWith("image/")) {
-      return fileUrl;
-    }
-
-    // For text files, use direct URL
-    if (file.mimeType === "text/plain") {
-      return fileUrl;
-    }
-
+    
     return fileUrl;
   };
 
@@ -288,8 +315,9 @@ const CourseView = () => {
     }
   };
 
-  const handleViewFile = (file) => {
+  const handleViewFile = (file, sectionIndex, fileIndex) => {
     setLightboxFile(file);
+    setLightboxFileIndices({ sectionIndex, fileIndex });
     setIsLightboxOpen(true);
     // Prevent body scroll when lightbox is open
     document.body.style.overflow = "hidden";
@@ -298,6 +326,7 @@ const CourseView = () => {
   const handleCloseLightbox = () => {
     setIsLightboxOpen(false);
     setLightboxFile(null);
+    setLightboxFileIndices(null);
     // Restore body scroll
     document.body.style.overflow = "auto";
   };
@@ -602,15 +631,16 @@ const CourseView = () => {
                     </h3>
                     {course.contentSections && course.contentSections.length > 0 ? (
                       <div className="accordion" id="contentSectionsAccordion">
-                        {course.contentSections.map((section, sectionIndex) => (
+                        {course.contentSections.map((section, sectionIndex) => {
+                          const isOpen = openSections.has(sectionIndex);
+                          return (
                           <div key={sectionIndex} className="accordion-item mb-3 border rounded-3">
                             <h2 className="accordion-header">
                               <button
-                                className="accordion-button"
+                                className={`accordion-button ${isOpen ? '' : 'collapsed'}`}
                                 type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target={`#section-${sectionIndex}`}
-                                aria-expanded={sectionIndex === 0}
+                                onClick={() => toggleSection(sectionIndex)}
+                                aria-expanded={isOpen ? 'true' : 'false'}
                                 aria-controls={`section-${sectionIndex}`}
                               >
                                 <div className="d-flex align-items-center w-100">
@@ -633,12 +663,11 @@ const CourseView = () => {
                             </h2>
                             <div
                               id={`section-${sectionIndex}`}
-                              className={`accordion-collapse collapse ${sectionIndex === 0 ? 'show' : ''}`}
-                              data-bs-parent="#contentSectionsAccordion"
+                              className={`accordion-collapse collapse ${isOpen ? 'show' : ''}`}
                             >
                               <div className="accordion-body">
                                 {section.files && section.files.length > 0 ? (
-                                  <div className="row g-3">
+                                  <div className="row g-3 mb-4">
                                     {section.files.map((file, fileIndex) => (
                                       <div key={fileIndex} className="col-md-6 col-lg-4">
                                         <div className="bg-light p-3 rounded-3 h-100">
@@ -687,7 +716,7 @@ const CourseView = () => {
                                               canViewInLightbox(file.mimeType) && (
                                                 <button
                                                   className="btn btn-outline-primary btn-sm"
-                                                  onClick={() => handleViewFile(file)}
+                                                  onClick={() => handleViewFile(file, sectionIndex, fileIndex)}
                                                   title="View in lightbox"
                                                 >
                                                   <i className="bi bi-eye"></i>
@@ -699,16 +728,146 @@ const CourseView = () => {
                                     ))}
                                   </div>
                                 ) : (
-                                  <div className="bg-light p-4 rounded-3 text-center">
+                                  <div className="bg-light p-4 rounded-3 text-center mb-4">
                                     <p className="text-muted mb-0">
                                       No files available in this section.
                                     </p>
                                   </div>
                                 )}
+                                {/* My Submission Section - Only for homework/activity sections and students */}
+                                {userRole === "student" &&
+                                  ["homework", "activity"].includes(section.contentType) && (
+                                    <div className="mt-4 pt-4 border-top">
+                                      <h5 className="fw-bold mb-3 text-primary">
+                                        <i className="bi bi-send-fill me-2"></i>
+                                        My Submission
+                                      </h5>
+                                      {mySubmission ? (
+                                        <div className="card border-0 shadow-sm">
+                                          <div className="card-body p-4">
+                                            <div className="row mb-3">
+                                              <div className="col-md-6">
+                                                <p className="mb-1 text-muted">Status</p>
+                                                <span
+                                                  className={`badge ${
+                                                    mySubmission.status === "graded"
+                                                      ? "bg-success"
+                                                      : mySubmission.status === "submitted"
+                                                      ? "bg-warning"
+                                                      : "bg-secondary"
+                                                  } fs-6`}
+                                                >
+                                                  {mySubmission.status
+                                                    .charAt(0)
+                                                    .toUpperCase() +
+                                                    mySubmission.status.slice(1)}
+                                                </span>
+                                              </div>
+                                              {mySubmission.grade !== undefined && (
+                                                <div className="col-md-6">
+                                                  <p className="mb-1 text-muted">Grade</p>
+                                                  <h5 className="mb-0 fw-bold text-primary">
+                                                    {mySubmission.grade}/100
+                                                  </h5>
+                                                </div>
+                                              )}
+                                            </div>
+
+                                            {mySubmission.feedback && (
+                                              <div className="mb-3">
+                                                <p className="mb-1 text-muted">Feedback</p>
+                                                <div className="bg-light p-3 rounded">
+                                                  <p className="mb-0">
+                                                    {mySubmission.feedback}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            )}
+
+                                            {mySubmission.submittedFiles &&
+                                              mySubmission.submittedFiles.length > 0 && (
+                                                <div className="mb-3">
+                                                  <p className="mb-2 text-muted">
+                                                    Submitted Files (
+                                                    {mySubmission.submittedFiles.length})
+                                                  </p>
+                                                  <div className="row g-2">
+                                                    {mySubmission.submittedFiles.map(
+                                                      (file, index) => (
+                                                        <div key={index} className="col-md-6">
+                                                          <div className="bg-light p-2 rounded d-flex justify-content-between align-items-center">
+                                                            <small className="text-muted">
+                                                              {file.originalFileName}
+                                                            </small>
+                                                            <button
+                                                              className="btn btn-sm btn-outline-primary"
+                                                              onClick={() =>
+                                                                handleDownloadSubmissionFile(
+                                                                  mySubmission._id,
+                                                                  index,
+                                                                  file.originalFileName
+                                                                )
+                                                              }
+                                                            >
+                                                              <i className="bi bi-download"></i>
+                                                            </button>
+                                                          </div>
+                                                        </div>
+                                                      )
+                                                    )}
+                                                  </div>
+                                                </div>
+                                              )}
+
+                                            <div className="d-flex gap-2">
+                                              {mySubmission.status !== "graded" && (
+                                                <button
+                                                  className="btn btn-primary"
+                                                  onClick={() => setShowSubmitModal(true)}
+                                                >
+                                                  <i className="bi bi-pencil me-2"></i>
+                                                  {mySubmission.status === "submitted"
+                                                    ? "Update Submission"
+                                                    : "Submit"}
+                                                </button>
+                                              )}
+                                              <button
+                                                className="btn btn-outline-secondary"
+                                                onClick={() => setShowSubmitModal(true)}
+                                              >
+                                                <i className="bi bi-eye me-2"></i>
+                                                View Details
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <div className="card border-0 shadow-sm">
+                                          <div className="card-body p-4 text-center">
+                                            <i
+                                              className="bi bi-inbox text-muted mb-3"
+                                              style={{ fontSize: "3rem" }}
+                                            ></i>
+                                            <p className="text-muted mb-3">
+                                              You haven't submitted your work yet.
+                                            </p>
+                                            <button
+                                              className="btn btn-primary btn-lg"
+                                              onClick={() => setShowSubmitModal(true)}
+                                            >
+                                              <i className="bi bi-upload me-2"></i>
+                                              Submit Work
+                                            </button>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
                               </div>
                             </div>
                           </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     ) : (
                       <div className="bg-light p-4 rounded-3 text-center">
@@ -719,139 +878,6 @@ const CourseView = () => {
                     )}
                   </div>
                 </div>
-                {/* Submission Section for Students */}
-                {userRole === "student" &&
-                  course.contentSections?.some(section => 
-                    ["homework", "activity"].includes(section.contentType)
-                  ) && (
-                    <div className="row mb-4">
-                      <div className="col-12">
-                        <h3 className="fw-bold mb-3 text-primary">
-                          <i className="bi bi-send-fill me-2"></i>
-                          My Submission
-                        </h3>
-                        {mySubmission ? (
-                          <div className="card border-0 shadow-sm">
-                            <div className="card-body p-4">
-                              <div className="row mb-3">
-                                <div className="col-md-6">
-                                  <p className="mb-1 text-muted">Status</p>
-                                  <span
-                                    className={`badge ${
-                                      mySubmission.status === "graded"
-                                        ? "bg-success"
-                                        : mySubmission.status === "submitted"
-                                        ? "bg-warning"
-                                        : "bg-secondary"
-                                    } fs-6`}
-                                  >
-                                    {mySubmission.status
-                                      .charAt(0)
-                                      .toUpperCase() +
-                                      mySubmission.status.slice(1)}
-                                  </span>
-                                </div>
-                                {mySubmission.grade !== undefined && (
-                                  <div className="col-md-6">
-                                    <p className="mb-1 text-muted">Grade</p>
-                                    <h5 className="mb-0 fw-bold text-primary">
-                                      {mySubmission.grade}/100
-                                    </h5>
-                                  </div>
-                                )}
-                              </div>
-
-                              {mySubmission.feedback && (
-                                <div className="mb-3">
-                                  <p className="mb-1 text-muted">Feedback</p>
-                                  <div className="bg-light p-3 rounded">
-                                    <p className="mb-0">
-                                      {mySubmission.feedback}
-                                    </p>
-                                  </div>
-                                </div>
-                              )}
-
-                              {mySubmission.submittedFiles &&
-                                mySubmission.submittedFiles.length > 0 && (
-                                  <div className="mb-3">
-                                    <p className="mb-2 text-muted">
-                                      Submitted Files (
-                                      {mySubmission.submittedFiles.length})
-                                    </p>
-                                    <div className="row g-2">
-                                      {mySubmission.submittedFiles.map(
-                                        (file, index) => (
-                                          <div key={index} className="col-md-6">
-                                            <div className="bg-light p-2 rounded d-flex justify-content-between align-items-center">
-                                              <small className="text-muted">
-                                                {file.originalFileName}
-                                              </small>
-                                              <button
-                                                className="btn btn-sm btn-outline-primary"
-                                                onClick={() =>
-                                                  handleDownloadSubmissionFile(
-                                                    mySubmission._id,
-                                                    index,
-                                                    file.originalFileName
-                                                  )
-                                                }
-                                              >
-                                                <i className="bi bi-download"></i>
-                                              </button>
-                                            </div>
-                                          </div>
-                                        )
-                                      )}
-                                    </div>
-                                  </div>
-                                )}
-
-                              <div className="d-flex gap-2">
-                                {mySubmission.status !== "graded" && (
-                                  <button
-                                    className="btn btn-primary"
-                                    onClick={() => setShowSubmitModal(true)}
-                                  >
-                                    <i className="bi bi-pencil me-2"></i>
-                                    {mySubmission.status === "submitted"
-                                      ? "Update Submission"
-                                      : "Submit"}
-                                  </button>
-                                )}
-                                <button
-                                  className="btn btn-outline-secondary"
-                                  onClick={() => setShowSubmitModal(true)}
-                                >
-                                  <i className="bi bi-eye me-2"></i>
-                                  View Details
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="card border-0 shadow-sm">
-                            <div className="card-body p-4 text-center">
-                              <i
-                                className="bi bi-inbox text-muted mb-3"
-                                style={{ fontSize: "3rem" }}
-                              ></i>
-                              <p className="text-muted mb-3">
-                                You haven't submitted your work yet.
-                              </p>
-                              <button
-                                className="btn btn-primary btn-lg"
-                                onClick={() => setShowSubmitModal(true)}
-                              >
-                                <i className="bi bi-upload me-2"></i>
-                                Submit Work
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
 
                 {/* Submissions Section for Teachers/Admins */}
                 {(userRole === "admin" || userRole === "teacher") &&
@@ -1061,7 +1087,7 @@ const CourseView = () => {
             >
               {lightboxFile.mimeType === "application/pdf" ? (
                 <iframe
-                  src={getViewerUrl(lightboxFile)}
+                  src={getViewerUrl(lightboxFile, lightboxFileIndices?.sectionIndex, lightboxFileIndices?.fileIndex)}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -1080,7 +1106,7 @@ const CourseView = () => {
                   }}
                 >
                   <img
-                    src={getViewerUrl(lightboxFile)}
+                    src={getViewerUrl(lightboxFile, lightboxFileIndices?.sectionIndex, lightboxFileIndices?.fileIndex)}
                     alt={lightboxFile.originalFileName}
                     style={{
                       maxWidth: "100%",
@@ -1091,7 +1117,7 @@ const CourseView = () => {
                 </div>
               ) : lightboxFile.mimeType === "text/plain" ? (
                 <iframe
-                  src={getViewerUrl(lightboxFile)}
+                  src={getViewerUrl(lightboxFile, lightboxFileIndices?.sectionIndex, lightboxFileIndices?.fileIndex)}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -1101,7 +1127,7 @@ const CourseView = () => {
                 />
               ) : (
                 <iframe
-                  src={getViewerUrl(lightboxFile)}
+                  src={getViewerUrl(lightboxFile, lightboxFileIndices?.sectionIndex, lightboxFileIndices?.fileIndex)}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -1259,7 +1285,13 @@ const CourseView = () => {
                               <button
                                 type="button"
                                 className="btn btn-sm btn-outline-info"
-                                onClick={() => handleViewFile(file)}
+                                onClick={() => {
+                                  // For submission files, pass null indices to use direct URL
+                                  setLightboxFile(file);
+                                  setLightboxFileIndices(null);
+                                  setIsLightboxOpen(true);
+                                  document.body.style.overflow = "hidden";
+                                }}
                                 title="View"
                               >
                                 <i className="bi bi-eye"></i>

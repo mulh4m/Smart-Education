@@ -296,23 +296,19 @@ exports.updateProfile = async (req, res) => {
     const { fullName, email, phone } = req.body;
     const userId = req.user.id;
 
-    // Check if email is being changed and if it already exists
+    // Prevent email updates
     if (email && email !== req.user.email) {
-      const existingUser = await User.findOne({ email, _id: { $ne: userId } });
-      if (existingUser) {
-        return res.status(400).json({
-          status: "error",
-          message: "Email is already in use by another account",
-        });
-      }
+      return res.status(400).json({
+        status: "error",
+        message: "Email cannot be changed",
+      });
     }
 
-    // Update user profile
+    // Update user profile (excluding email)
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
         ...(fullName && { fullName }),
-        ...(email && { email }),
         ...(phone && { phone }),
       },
       {

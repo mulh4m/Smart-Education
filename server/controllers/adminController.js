@@ -201,6 +201,14 @@ exports.deleteUser = async (req, res) => {
       });
     }
 
+    // Prevent deleting admin accounts
+    if (user.role === "admin") {
+      return res.status(403).json({
+        status: "error",
+        message: "Cannot delete admin accounts",
+      });
+    }
+
     await User.findByIdAndDelete(id);
 
     res.status(200).json({

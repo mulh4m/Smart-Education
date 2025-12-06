@@ -15,6 +15,11 @@ exports.protect = async (req, res, next) => {
     ) {
       token = req.headers.authorization.split(" ")[1];
     }
+    
+    // Also check query string for token (useful for iframe access)
+    if (!token && req.query.token) {
+      token = req.query.token;
+    }
 
     // Make sure token exists
     if (!token) {

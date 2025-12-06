@@ -19,6 +19,7 @@ const {
   deleteSubmission,
   downloadCourseFile,
   downloadSubmissionFile,
+  viewCourseFile,
 } = require("../controllers/courseController");
 
 // Protect all routes
@@ -29,6 +30,7 @@ router.get("/", getCourses);
 router.get("/subjects/list", getSubjects);
 router.get("/subject/:subject", getCoursesBySubject);
 router.get("/download/:courseId/:sectionIndex/:fileIndex", downloadCourseFile);
+router.get("/view/:courseId/:sectionIndex/:fileIndex", viewCourseFile);
 router.get(
   "/download-submission/:submissionId/:fileIndex",
   downloadSubmissionFile
