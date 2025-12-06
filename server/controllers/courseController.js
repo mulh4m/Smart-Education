@@ -821,6 +821,7 @@ exports.getMySubmission = async (req, res) => {
   }
 };
 
+
 /**
  * @desc    Get all submissions for a course (Teachers/Admins view all submissions)
  * @route   GET /api/courses/:courseId/submissions

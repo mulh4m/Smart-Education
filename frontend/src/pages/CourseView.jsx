@@ -499,7 +499,7 @@ const CourseView = () => {
 
   return (
     <div className="min-vh-100 bg-gradient-light">
-      <div className="container py-5" style={{ marginTop: "2rem" }}>
+      <div className="container py-5" style={{ marginTop: "6rem" }}>
         <div className="row justify-content-center">
           <div className="col-12">
             <button

@@ -135,16 +135,16 @@ const Summary = () => {
   const handleBackToDashboard = () => {
     switch(userRole) {
       case 'admin':
-        navigate('/admin/dashboard');
+        navigate('/admin-dashboard');
         break;
       case 'teacher':
-        navigate('/teacher/dashboard');
+        navigate('/teacher-dashboard');
         break;
       case 'student':
-        navigate('/student/dashboard');
+        navigate('/student-dashboard');
         break;
       default:
-        navigate('/');
+        navigate('/dashboard');
     }
   };
 

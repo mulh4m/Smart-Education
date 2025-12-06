@@ -285,7 +285,7 @@ const CreateCourse = ({ onSuccess }) => {
 
   return (
     <div className="container-fluid">
-      <div className="row mb-4">
+      <div className="row mb-4 text-center">
         <div className="col-12">
           <h2 className="fw-bold">
             <i className="bi bi-plus-circle-fill text-primary me-2"></i>

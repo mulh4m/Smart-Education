@@ -175,8 +175,8 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className="min-vh-100 bg-gradient-light d-flex align-items-center">
-      <div className="container py-5">
+    <div className="min-vh-100 bg-gradient-light">
+      <div className="container py-5" style={{ marginTop: "4rem" }}>
         <div className="row justify-content-center">
           <div className="col-12">
             {activeView !== 'dashboard' && (
