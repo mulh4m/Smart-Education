@@ -29,34 +29,15 @@ router.use(protect);
 router.get("/", getCourses);
 router.get("/subjects/list", getSubjects);
 router.get("/subject/:subject", getCoursesBySubject);
+router.get("/stats/overview", authorize("admin", "teacher"), getCourseStats);
 router.get("/download/:courseId/:sectionIndex/:fileIndex", downloadCourseFile);
 router.get("/view/:courseId/:sectionIndex/:fileIndex", viewCourseFile);
 router.get(
   "/download-submission/:submissionId/:fileIndex",
   downloadSubmissionFile
 );
-router.get("/:id", getCourse);
 
-// Admin & teacher only routes
-router.post(
-  "/",
-  authorize("admin", "teacher"),
-  uploadCourseContent("content"),
-  createCourse
-);
-
-router.put(
-  "/:id",
-  authorize("admin", "teacher"),
-  uploadCourseContent("content"),
-  updateCourse
-);
-
-router.delete("/:id", authorize("admin", "teacher"), deleteCourse);
-
-router.get("/stats/overview", authorize("admin", "teacher"), getCourseStats);
-
-// Submission routes
+// Submission routes (more specific, must come before /:id)
 // Student routes
 router.post(
   "/:courseId/submit",
@@ -92,5 +73,25 @@ router.put(
   authorize("admin", "teacher"),
   gradeSubmission
 );
+
+// Admin & teacher only routes (specific routes before generic)
+router.post(
+  "/",
+  authorize("admin", "teacher"),
+  uploadCourseContent("content"),
+  createCourse
+);
+
+router.put(
+  "/:id",
+  authorize("admin", "teacher"),
+  uploadCourseContent("content"),
+  updateCourse
+);
+
+router.delete("/:id", authorize("admin", "teacher"), deleteCourse);
+
+// Generic single course route (must be last)
+router.get("/:id", getCourse);
 
 module.exports = router;

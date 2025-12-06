@@ -68,11 +68,9 @@ const submissionSchema = new mongoose.Schema(
   }
 );
 
-// Index for faster queries
-submissionSchema.index({ course: 1, student: 1 });
+// Index for faster queries - only keep the unique compound index
 submissionSchema.index({ student: 1 });
 submissionSchema.index({ course: 1, status: 1 });
-
 // Prevent duplicate submissions from same student for same course
 submissionSchema.index({ course: 1, student: 1 }, { unique: true });
 

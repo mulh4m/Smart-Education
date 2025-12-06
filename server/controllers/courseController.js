@@ -78,16 +78,40 @@ exports.createCourse = async (req, res) => {
       });
     }
 
+    // Map content types to directory names
+    const contentTypeToDir = {
+      video: 'videos',
+      material: 'materials',
+      homework: 'homework',
+      activity: 'activities',
+      submission: 'submissions'
+    };
+
     // Process files and assign them to sections
     let fileIndex = 0;
     const processedSections = parsedContentSections.map((section) => {
       const sectionFiles = [];
       const fileCount = section.fileCount || 1;
+      const dirName = contentTypeToDir[section.contentType] || section.contentType;
       
       for (let i = 0; i < fileCount && fileIndex < req.files.length; i++) {
         const file = req.files[fileIndex];
+        const oldPath = file.path;
+        const newDir = path.join(__dirname, "..", "public", "uploads", dirName);
+        const newPath = path.join(newDir, file.filename);
+        
+        // Ensure directory exists
+        if (!fs.existsSync(newDir)) {
+          fs.mkdirSync(newDir, { recursive: true });
+        }
+        
+        // Move file to correct directory if it's not already there
+        if (oldPath !== newPath && fs.existsSync(oldPath)) {
+          fs.renameSync(oldPath, newPath);
+        }
+        
         sectionFiles.push({
-          url: `/uploads/${section.contentType}s/${file.filename}`,
+          url: `/uploads/${dirName}/${file.filename}`,
           originalFileName: file.originalname,
           fileSize: file.size,
           mimeType: file.mimetype,
@@ -301,6 +325,13 @@ exports.updateCourse = async (req, res) => {
       // If new files are uploaded, process them
       if (req.files && req.files.length > 0) {
         let fileIndex = 0;
+        const contentTypeToDir = {
+          video: 'videos',
+          material: 'materials',
+          homework: 'homework',
+          activity: 'activities',
+          submission: 'submissions'
+        };
         const updatedSections = parsedContentSections.map((section) => {
           // Find existing section by _id if it exists
           const existingSection = section._id 
@@ -313,11 +344,26 @@ exports.updateCourse = async (req, res) => {
             // Add new files to this section
             const newFiles = [];
             const fileCount = section.newFileCount || 1;
+            const dirName = contentTypeToDir[section.contentType] || section.contentType;
             
             for (let i = 0; i < fileCount && fileIndex < req.files.length; i++) {
               const file = req.files[fileIndex];
+              const oldPath = file.path;
+              const newDir = path.join(__dirname, "..", "public", "uploads", dirName);
+              const newPath = path.join(newDir, file.filename);
+              
+              // Ensure directory exists
+              if (!fs.existsSync(newDir)) {
+                fs.mkdirSync(newDir, { recursive: true });
+              }
+              
+              // Move file to correct directory if it's not already there
+              if (oldPath !== newPath && fs.existsSync(oldPath)) {
+                fs.renameSync(oldPath, newPath);
+              }
+              
               newFiles.push({
-                url: `/uploads/${section.contentType}s/${file.filename}`,
+                url: `/uploads/${dirName}/${file.filename}`,
                 originalFileName: file.originalname,
                 fileSize: file.size,
                 mimeType: file.mimetype,
@@ -563,8 +609,17 @@ exports.submitHomework = async (req, res) => {
   try {
     const { courseId } = req.params;
 
+    console.log("submitHomework called:", {
+      courseId,
+      userId: req.user._id,
+      userRole: req.user.role,
+      filesCount: req.files ? req.files.length : 0,
+      filesList: req.files ? req.files.map(f => ({name: f.originalname, path: f.path})) : []
+    });
+
     // Check if user is a student
     if (req.user.role !== "student") {
+      console.log("Not a student, role:", req.user.role);
       return res.status(403).json({
         status: "error",
         message: "Only students can submit homework/activity",
@@ -575,11 +630,20 @@ exports.submitHomework = async (req, res) => {
     const course = await Course.findById(courseId);
 
     if (!course) {
+      console.log("Course not found:", courseId);
       return res.status(404).json({
         status: "error",
         message: "Course not found",
       });
     }
+
+    console.log("Course found:", {
+      courseId: course._id,
+      sections: course.contentSections.map(s => ({
+        type: s.contentType,
+        title: s.title
+      }))
+    });
 
     // Check if course has homework or activity sections
     const hasSubmittableContent = course.contentSections.some(section => 
@@ -587,6 +651,7 @@ exports.submitHomework = async (req, res) => {
     );
     
     if (!hasSubmittableContent) {
+      console.log("No submittable content in course");
       return res.status(400).json({
         status: "error",
         message: "This course does not have homework or activity sections",
@@ -595,6 +660,7 @@ exports.submitHomework = async (req, res) => {
 
     // Check if files were uploaded
     if (!req.files || req.files.length === 0) {
+      console.log("No files uploaded");
       return res.status(400).json({
         status: "error",
         message: "Please upload at least one file",
@@ -615,7 +681,14 @@ exports.submitHomework = async (req, res) => {
       student: req.user._id,
     });
 
+    console.log("Checking existing submission:", {
+      courseId,
+      studentId: req.user._id,
+      exists: !!existingSubmission
+    });
+
     if (existingSubmission) {
+      console.log("Updating existing submission");
       // Delete old files
       if (existingSubmission.submittedFiles && existingSubmission.submittedFiles.length > 0) {
         existingSubmission.submittedFiles.forEach((file) => {
@@ -638,6 +711,8 @@ exports.submitHomework = async (req, res) => {
       await existingSubmission.populate("student", "fullName email");
       await existingSubmission.populate("course", "title contentType");
 
+      console.log("Submission updated successfully");
+
       return res.status(200).json({
         status: "success",
         message: "Submission updated successfully",
@@ -648,11 +723,24 @@ exports.submitHomework = async (req, res) => {
     }
 
     // Create new submission
+    console.log("Creating new submission with:", {
+      courseId,
+      studentId: req.user._id,
+      fileCount: submittedFiles.length
+    });
+
     const submission = await Submission.create({
       course: courseId,
       student: req.user._id,
       submittedFiles,
       status: "submitted",
+    });
+
+    console.log("Submission created:", {
+      submissionId: submission._id,
+      courseId,
+      studentId: req.user._id,
+      fileCount: submittedFiles.length
     });
 
     await submission.populate("student", "fullName email");
@@ -675,7 +763,11 @@ exports.submitHomework = async (req, res) => {
       });
     }
 
-    console.error("Submit homework error:", error);
+    console.error("Submit homework error:", {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     res.status(500).json({
       status: "error",
       message: error.message || "Error submitting homework",
@@ -739,8 +831,17 @@ exports.getSubmissions = async (req, res) => {
     const { courseId } = req.params;
     const { status } = req.query;
 
+    console.log("=== getSubmissions CALLED ===", {
+      courseId,
+      status,
+      userRole: req.user.role,
+      userId: req.user._id,
+      timestamp: new Date().toISOString()
+    });
+
     // Check if user is admin or teacher
     if (!["admin", "teacher"].includes(req.user.role)) {
+      console.log("User role not authorized:", req.user.role);
       return res.status(403).json({
         status: "error",
         message: "Only teachers and admins can view submissions",
@@ -799,10 +900,26 @@ exports.getSubmissions = async (req, res) => {
       query.status = status;
     }
 
+    console.log("Submissions query:", {
+      query,
+      courseId,
+      status
+    });
+
     const submissions = await Submission.find(query)
       .populate("student", "fullName email")
       .populate("gradedBy", "fullName email")
       .sort({ submittedAt: -1 });
+
+    console.log("Submissions found:", {
+      count: submissions.length,
+      submissions: submissions.map(s => ({
+        id: s._id,
+        course: s.course,
+        student: s.student?.fullName,
+        status: s.status
+      }))
+    });
 
     res.status(200).json({
       status: "success",

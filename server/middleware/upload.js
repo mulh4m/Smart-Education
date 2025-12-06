@@ -7,6 +7,7 @@ const uploadDirs = {
   videos: "./public/uploads/videos",
   materials: "./public/uploads/materials",
   homework: "./public/uploads/homework",
+  activities: "./public/uploads/activities",
   submissions: "./public/uploads/submissions",
   general: "./public/uploads",
 };
@@ -27,15 +28,46 @@ const storage = multer.diskStorage({
     
     if (isSubmission) {
       uploadPath = uploadDirs.submissions;
-    } else if (
-      req.body.contentType === "video" ||
-      file.mimetype.startsWith("video/")
-    ) {
-      uploadPath = uploadDirs.videos;
-    } else if (req.body.contentType === "material") {
-      uploadPath = uploadDirs.materials;
-    } else if (req.body.contentType === "homework") {
-      uploadPath = uploadDirs.homework;
+    } else {
+      // For course content, we'll determine the correct directory in the controller
+      // For now, just save to temp location - files will be moved by the controller
+      // based on content section information
+      
+      // Try to infer from contentSections if available
+      if (req.body.contentSections) {
+        try {
+          const sections = typeof req.body.contentSections === 'string'
+            ? JSON.parse(req.body.contentSections)
+            : req.body.contentSections;
+          
+          if (sections && sections.length > 0) {
+            const firstContentType = sections[0].contentType;
+            
+            if (firstContentType === "video" || file.mimetype.startsWith("video/")) {
+              uploadPath = uploadDirs.videos;
+            } else if (firstContentType === "material") {
+              uploadPath = uploadDirs.materials;
+            } else if (firstContentType === "homework") {
+              uploadPath = uploadDirs.homework;
+            } else if (firstContentType === "activity") {
+              uploadPath = uploadDirs.activities;
+            }
+          }
+        } catch (e) {
+          console.error("Error parsing contentSections in destination:", e);
+        }
+      } else if (
+        req.body.contentType === "video" ||
+        file.mimetype.startsWith("video/")
+      ) {
+        uploadPath = uploadDirs.videos;
+      } else if (req.body.contentType === "material") {
+        uploadPath = uploadDirs.materials;
+      } else if (req.body.contentType === "homework") {
+        uploadPath = uploadDirs.homework;
+      } else if (req.body.contentType === "activity") {
+        uploadPath = uploadDirs.activities;
+      }
     }
 
     cb(null, uploadPath);
