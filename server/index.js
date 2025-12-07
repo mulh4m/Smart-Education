@@ -11,20 +11,9 @@ const connectDB = require("./utils/db");
 const multer = require("multer");
 
 const axios = require("axios");
- 
-// pdf-parse can be exported differently depending on setup,
 
-// so we normalize it to always get the function.
-
-let pdfParse = require("pdf-parse");
-
-if (pdfParse.default) {
-
-  // handle ESM-style default export
-
-  pdfParse = pdfParse.default;
-
-}
+// Import pdf-parse node module for CJS
+const pdfParse = require("pdf-parse/node");
  
 // Load environment variables
 
@@ -120,8 +109,15 @@ app.post("/api/summarize", upload.single("file"), async (req, res) => {
  
       try {
 
-        // Try to extract text from the PDF buffer
+        // Validate pdf parser is loaded
+        if (typeof pdfParse !== 'function') {
+          console.error('PDF parser is not available or not a function. Type:', typeof pdfParse);
+          return res.status(500).json({ 
+            error: "PDF parsing library is not properly initialized. Please try again." 
+          });
+        }
 
+        // Try to extract text from the PDF buffer
         const data = await pdfParse(file.buffer);
 
         textToSummarize = data.text || "";
