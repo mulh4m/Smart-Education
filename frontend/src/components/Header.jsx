@@ -82,62 +82,80 @@ const Header = () => {
 
   // Theme-aware color functions
   const getNavbarBg = () => {
-    if (!isScrolled) return "rgba(255,255,255,0.9)";
-    return isDark ? "#1a1a2e" : "#ffffff";
+    return isDark ? "#0f0f1e" : "#ffffff";
   };
 
   const getTextColor = () => {
-    return isDark ? "#e0e0e0" : "#2c3e50";
+    return isDark ? "#d0d0d0" : "#3a3a3a";
   };
 
   const getBrandColor = () => {
-    return isDark ? "#e0e0e0" : "#2c3e50";
-  };
-
-  const getBorderColor = () => {
     return "#667eea";
   };
 
+  const getAccentColor = () => {
+    return "#667eea";
+  };
+
+  const getBorderColor = () => {
+    return isDark ? "rgba(102, 126, 234, 0.15)" : "rgba(0, 0, 0, 0.08)";
+  };
+
   const getDropdownBg = () => {
-    return isDark ? "#2d2d44" : "#ffffff";
+    return isDark ? "#1a1a2e" : "#ffffff";
   };
 
   const getDropdownHeaderBg = () => {
-    return isDark ? "#3a3a52" : "#f8f9fa";
+    return isDark ? "#2d2d40" : "#f5f5f5";
   };
 
   const getDropdownTextColor = () => {
-    return isDark ? "#e0e0e0" : "#212529";
+    return isDark ? "#d0d0d0" : "#3a3a3a";
   };
 
   const getDropdownMutedColor = () => {
-    return isDark ? "#b0b0b0" : "#6c757d";
+    return isDark ? "#a0a0a0" : "#666666";
+  };
+
+  const getHoverBg = () => {
+    return isDark ? "rgba(102, 126, 234, 0.08)" : "rgba(102, 126, 234, 0.05)";
   };
 
   return (
     <nav
       className={`navbar navbar-expand-lg fixed-top ${
-        isScrolled ? "shadow-lg" : ""
+        isScrolled ? "shadow" : ""
       }`}
       style={{
         background: getNavbarBg(),
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
         transition: "all 0.3s ease",
-        paddingTop: "0.875rem",
-        paddingBottom: "0.875rem",
-        minHeight: "70px",
+        paddingTop: "1rem",
+        paddingBottom: "1rem",
+        minHeight: "72px",
         zIndex: 1030,
-        borderBottom: "1px solid rgba(102, 126, 234, 0.1)",
+        borderBottom: `1px solid ${getBorderColor()}`,
       }}
     >
-      <div className="container">
+      <div className="container-fluid px-4">
         <Link
           className="navbar-brand fw-bold"
           to="/"
-          style={{ color: getBrandColor(), fontSize: "1.5rem" }}
+          style={{
+            color: getBrandColor(),
+            fontSize: "1.3rem",
+            letterSpacing: "0.5px",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = "0.85";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = "1";
+          }}
         >
-          <i className="bi bi-mortarboard-fill me-2"></i>
+          <i className="bi bi-mortarboard-fill me-2" style={{ fontSize: "1.2rem" }}></i>
           {t("header.brand")}
         </Link>
 
@@ -147,15 +165,13 @@ const Header = () => {
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
           style={{
-            borderColor: getBorderColor(),
-            padding: "0.5rem",
-            borderRadius: "8px",
+            borderColor: getAccentColor(),
+            padding: "0.4rem 0.6rem",
+            borderRadius: "6px",
             transition: "all 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = isDark
-              ? "rgba(102, 126, 234, 0.1)"
-              : "rgba(102, 126, 234, 0.05)";
+            e.currentTarget.style.backgroundColor = getHoverBg();
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.backgroundColor = "transparent";
@@ -164,10 +180,7 @@ const Header = () => {
           <span
             className="navbar-toggler-icon"
             style={{
-              backgroundImage:
-                !isScrolled || isDark
-                  ? `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")`
-                  : undefined,
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='${encodeURIComponent(getTextColor())}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")`,
             }}
           ></span>
         </button>
@@ -178,20 +191,18 @@ const Header = () => {
               <>
                 <li className="nav-item">
                   <a
-                    className="nav-link position-relative"
+                    className="nav-link"
                     href="#home"
                     style={{
                       color: getTextColor(),
                       fontWeight: "500",
                       padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      transition: "all 0.3s ease",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(102, 126, 234, 0.1)"
-                        : "rgba(102, 126, 234, 0.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.color = getTextColor();
@@ -203,20 +214,18 @@ const Header = () => {
                 </li>
                 <li className="nav-item">
                   <a
-                    className="nav-link position-relative"
+                    className="nav-link"
                     href="#about"
                     style={{
                       color: getTextColor(),
                       fontWeight: "500",
                       padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      transition: "all 0.3s ease",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(102, 126, 234, 0.1)"
-                        : "rgba(102, 126, 234, 0.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.color = getTextColor();
@@ -236,15 +245,13 @@ const Header = () => {
                       textDecoration: "none",
                       background: "none",
                       padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      transition: "all 0.3s ease",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
                     }}
                     title={i18n.language === "en" ? "العربية" : "English"}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(102, 126, 234, 0.1)"
-                        : "rgba(102, 126, 234, 0.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.color = getTextColor();
@@ -267,24 +274,20 @@ const Header = () => {
                     style={{
                       color: getTextColor(),
                       borderColor: getBorderColor(),
-                      backgroundColor: isDark
-                        ? "rgba(255,255,255,0.08)"
-                        : "rgba(0,0,0,0.05)",
-                      transition: "all 0.3s ease",
+                      backgroundColor: getHoverBg(),
+                      transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "rotate(15deg) scale(1.1)";
-                      e.currentTarget.style.borderColor = "#667eea";
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = "rgba(102,126,234,0.12)";
+                      e.currentTarget.style.transform = "rotate(12deg) scale(1.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = isDark
+                        ? "rgba(102,126,234,0.12)"
+                        : "rgba(102,126,234,0.1)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "rotate(0deg) scale(1)";
-                      e.currentTarget.style.borderColor = getBorderColor();
                       e.currentTarget.style.color = getTextColor();
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(255,255,255,0.08)"
-                        : "rgba(0,0,0,0.05)";
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                   >
                     <i
@@ -299,28 +302,21 @@ const Header = () => {
                     to="/login"
                     className="btn btn-outline-primary px-4"
                     style={{
-                      borderColor: getBorderColor(),
-                      color: getBorderColor(),
+                      borderColor: getAccentColor(),
+                      color: getAccentColor(),
                       backgroundColor: "transparent",
-                      borderRadius: "8px",
+                      borderRadius: "6px",
                       fontWeight: "500",
-                      transition: "all 0.3s ease",
-                      borderWidth: "2px",
+                      transition: "all 0.2s ease",
+                      border: `1.5px solid ${getAccentColor()}`,
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 12px rgba(102, 126, 234, 0.3)";
-                      e.currentTarget.style.backgroundColor = "#667eea";
+                      e.currentTarget.style.backgroundColor = getAccentColor();
                       e.currentTarget.style.color = "#fff";
-                      e.currentTarget.style.borderColor = "#667eea";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "none";
                       e.currentTarget.style.backgroundColor = "transparent";
-                      e.currentTarget.style.color = getBorderColor();
-                      e.currentTarget.style.borderColor = getBorderColor();
+                      e.currentTarget.style.color = getAccentColor();
                     }}
                   >
                     {t("header.signIn")}
@@ -331,28 +327,21 @@ const Header = () => {
                     to="/register"
                     className="btn btn-primary px-4"
                     style={{
-                      background:
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                      background: getAccentColor(),
                       border: "none",
                       color: "#fff",
-                      borderRadius: "8px",
+                      borderRadius: "6px",
                       fontWeight: "500",
-                      transition: "all 0.3s ease",
-                      boxShadow: "0 4px 15px rgba(102, 126, 234, 0.3)",
+                      transition: "all 0.2s ease",
+                      boxShadow: "0 2px 8px rgba(102, 126, 234, 0.2)",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow =
-                        "0 6px 20px rgba(102, 126, 234, 0.4)";
-                      e.currentTarget.style.background =
-                        "linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)";
+                      e.currentTarget.style.opacity = "0.9";
+                      e.currentTarget.style.boxShadow = "0 4px 12px rgba(102, 126, 234, 0.3)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 15px rgba(102, 126, 234, 0.3)";
-                      e.currentTarget.style.background =
-                        "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+                      e.currentTarget.style.opacity = "1";
+                      e.currentTarget.style.boxShadow = "0 2px 8px rgba(102, 126, 234, 0.2)";
                     }}
                   >
                     {t("header.getStarted")}
@@ -369,14 +358,12 @@ const Header = () => {
                       color: getTextColor(),
                       fontWeight: "500",
                       padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      transition: "all 0.3s ease",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(102, 126, 234, 0.1)"
-                        : "rgba(102, 126, 234, 0.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.color = getTextColor();
@@ -397,15 +384,13 @@ const Header = () => {
                       textDecoration: "none",
                       background: "none",
                       padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      transition: "all 0.3s ease",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
                     }}
                     title={i18n.language === "en" ? "العربية" : "English"}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(102, 126, 234, 0.1)"
-                        : "rgba(102, 126, 234, 0.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.color = getTextColor();
@@ -428,17 +413,20 @@ const Header = () => {
                     style={{
                       color: getTextColor(),
                       borderColor: getBorderColor(),
-                      transition: "all 0.3s ease",
+                      backgroundColor: getHoverBg(),
+                      transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "rotate(15deg) scale(1.1)";
-                      e.currentTarget.style.borderColor = "#667eea";
-                      e.currentTarget.style.color = "#667eea";
+                      e.currentTarget.style.transform = "rotate(12deg) scale(1.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = isDark
+                        ? "rgba(102,126,234,0.12)"
+                        : "rgba(102,126,234,0.1)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "rotate(0deg) scale(1)";
-                      e.currentTarget.style.borderColor = getBorderColor();
                       e.currentTarget.style.color = getTextColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                   >
                     <i
@@ -458,18 +446,18 @@ const Header = () => {
                       textDecoration: "none",
                       background: "none",
                       padding: "0.5rem 1rem",
-                      borderRadius: "8px",
-                      transition: "all 0.3s ease",
+                      borderRadius: "6px",
+                      transition: "all 0.2s ease",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#667eea";
-                      e.currentTarget.style.backgroundColor = isDark
-                        ? "rgba(102, 126, 234, 0.1)"
-                        : "rgba(102, 126, 234, 0.05)";
+                      e.currentTarget.style.color = getAccentColor();
+                      e.currentTarget.style.backgroundColor = getHoverBg();
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = getTextColor();
-                      e.currentTarget.style.backgroundColor = "transparent";
+                      if (!isDropdownOpen) {
+                        e.currentTarget.style.color = getTextColor();
+                        e.currentTarget.style.backgroundColor = "transparent";
+                      }
                     }}
                   >
                     <i
@@ -488,15 +476,17 @@ const Header = () => {
                   </button>
                   {isDropdownOpen && (
                     <ul
-                      className="dropdown-menu dropdown-menu-end shadow-lg border-0 show"
+                      className="dropdown-menu dropdown-menu-end shadow-sm border-0 show"
                       style={{
                         minWidth: "240px",
                         backgroundColor: getDropdownBg(),
-                        border: isDark ? "1px solid rgba(102, 126, 234, 0.2)" : "none",
-                        borderRadius: "12px",
+                        border: isDark ? "1px solid rgba(102, 126, 234, 0.15)" : "1px solid rgba(0, 0, 0, 0.05)",
+                        borderRadius: "8px",
                         padding: "0.5rem",
                         marginTop: "0.5rem",
-                        animation: "fadeInUp 0.3s ease",
+                        boxShadow: isDark 
+                          ? "0 4px 12px rgba(0, 0, 0, 0.3)"
+                          : "0 2px 8px rgba(0, 0, 0, 0.08)",
                       }}
                     >
                       <li>
@@ -504,28 +494,29 @@ const Header = () => {
                           className="dropdown-header"
                           style={{
                             backgroundColor: getDropdownHeaderBg(),
-                            borderRadius: "8px",
-                            padding: "1rem",
+                            borderRadius: "6px",
+                            padding: "0.75rem",
                             marginBottom: "0.5rem",
+                            border: `1px solid ${getBorderColor()}`,
                           }}
                         >
                           <div className="d-flex align-items-center">
                             <div
                               style={{
-                                width: "48px",
-                                height: "48px",
+                                width: "40px",
+                                height: "40px",
                                 borderRadius: "50%",
-                                background:
-                                  "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                                background: getAccentColor(),
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 marginRight: "0.75rem",
+                                color: "#fff",
                               }}
                             >
                               <i
-                                className="bi bi-person-fill text-white"
-                                style={{ fontSize: "1.5rem" }}
+                                className="bi bi-person-fill"
+                                style={{ fontSize: "1.2rem" }}
                               ></i>
                             </div>
                             <div style={{ flex: 1 }}>
@@ -533,18 +524,17 @@ const Header = () => {
                                 className="fw-semibold"
                                 style={{
                                   color: getDropdownTextColor(),
-                                  fontSize: "0.95rem",
-                                  marginBottom: "0.25rem",
+                                  fontSize: "0.9rem",
+                                  marginBottom: "0.2rem",
                                 }}
                               >
                                 {user?.fullName || t("common.user")}
                               </div>
                               <small
                                 className="text-capitalize d-block"
-                                style={{ color: getDropdownMutedColor() }}
+                                style={{ color: getDropdownMutedColor(), fontSize: "0.75rem" }}
                               >
-                                {user?.role || t("common.unknown")}{" "}
-                                {t("header.userAccount")}
+                                {user?.role || t("common.unknown")} {t("header.userAccount")}
                               </small>
                             </div>
                           </div>
@@ -557,22 +547,20 @@ const Header = () => {
                           onClick={closeDropdown}
                           style={{
                             color: getDropdownTextColor(),
-                            borderRadius: "8px",
+                            borderRadius: "6px",
                             transition: "all 0.2s ease",
                             marginBottom: "0.25rem",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = isDark
-                              ? "rgba(102, 126, 234, 0.15)"
-                              : "rgba(102, 126, 234, 0.1)";
-                            e.currentTarget.style.transform = "translateX(4px)";
+                            e.currentTarget.style.backgroundColor = getHoverBg();
+                            e.currentTarget.style.color = getAccentColor();
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = "transparent";
-                            e.currentTarget.style.transform = "translateX(0)";
+                            e.currentTarget.style.color = getDropdownTextColor();
                           }}
                         >
-                          <i className="bi bi-speedometer2 me-2 text-primary"></i>
+                          <i className="bi bi-speedometer2 me-2"></i>
                           {t("header.dashboard")}
                         </Link>
                       </li>
@@ -583,22 +571,20 @@ const Header = () => {
                           onClick={closeDropdown}
                           style={{
                             color: getDropdownTextColor(),
-                            borderRadius: "8px",
+                            borderRadius: "6px",
                             transition: "all 0.2s ease",
                             marginBottom: "0.25rem",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = isDark
-                              ? "rgba(102, 126, 234, 0.15)"
-                              : "rgba(102, 126, 234, 0.1)";
-                            e.currentTarget.style.transform = "translateX(4px)";
+                            e.currentTarget.style.backgroundColor = getHoverBg();
+                            e.currentTarget.style.color = getAccentColor();
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = "transparent";
-                            e.currentTarget.style.transform = "translateX(0)";
+                            e.currentTarget.style.color = getDropdownTextColor();
                           }}
                         >
-                          <i className="bi bi-person-gear me-2 text-success"></i>
+                          <i className="bi bi-person-gear me-2"></i>
                           Profile Settings
                         </Link>
                       </li>
@@ -606,9 +592,7 @@ const Header = () => {
                         <hr
                           className="dropdown-divider my-2"
                           style={{
-                            borderColor: isDark
-                              ? "rgba(102, 126, 234, 0.2)"
-                              : "rgba(0, 0, 0, 0.1)",
+                            borderColor: getBorderColor(),
                             opacity: 1,
                             margin: "0.5rem 0",
                           }}
@@ -616,25 +600,22 @@ const Header = () => {
                       </li>
                       <li>
                         <button
-                          className="dropdown-item py-2 text-danger fw-semibold d-flex align-items-center"
+                          className="dropdown-item py-2 fw-semibold d-flex align-items-center"
                           onClick={handleLogout}
                           style={{
                             border: "none",
                             background: "none",
                             width: "100%",
                             textAlign: "left",
-                            borderRadius: "8px",
+                            borderRadius: "6px",
                             transition: "all 0.2s ease",
+                            color: "#dc3545",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = isDark
-                              ? "rgba(220, 53, 69, 0.15)"
-                              : "rgba(220, 53, 69, 0.1)";
-                            e.currentTarget.style.transform = "translateX(4px)";
+                            e.currentTarget.style.backgroundColor = "rgba(220, 53, 69, 0.1)";
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = "transparent";
-                            e.currentTarget.style.transform = "translateX(0)";
                           }}
                         >
                           <i className="bi bi-box-arrow-right me-2"></i>

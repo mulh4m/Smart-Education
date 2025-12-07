@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';           // 👈 ADD THIS
-import { selectUser } from '../store/slices/authSlice';
-import { selectCourses } from '../store/slices/courseSlice';
+import { selectUser, selectToken } from '../store/slices/authSlice';
+import { selectCourses, getCourses } from '../store/slices/courseSlice';
 import CourseList from '../features/shared/CourseList';
 import { useTheme } from '../contexts/ThemeContext';
 
 const StudentDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();                         // 👈 AND THIS
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
+  const token = useSelector(selectToken);
   const courses = useSelector(selectCourses);
   const { isDark } = useTheme();
   
   const [activeView, setActiveView] = useState('dashboard');
+
+  // Fetch courses on component mount
+  useEffect(() => {
+    if (token && (!courses || courses.length === 0)) {
+      dispatch(getCourses({ token }));
+    }
+  }, [dispatch, token, courses?.length]);
 
   const hasContentType = (course, type) =>
     course?.contentSections?.some((section) => section.contentType === type);
@@ -138,7 +147,7 @@ const StudentDashboard = () => {
                       {t('pages.studentDashboard.actions.browseCourses.description')}
                     </p>
                     <button 
-                      className="btn btn-primary px-4 py-2 rounded-3 fw-semibold"
+                      className="btn btn-primary w-100 py-2 rounded-3 fw-semibold"
                       onClick={() => setActiveView('courses')}
                     >
                       <i className="bi bi-eye-fill me-2"></i>
@@ -168,7 +177,7 @@ const StudentDashboard = () => {
                       )}
                     </p>
                     <button 
-                      className="btn btn-success px-4 py-2 rounded-3 fw-semibold"
+                      className="btn btn-success w-100 py-2 rounded-3 fw-semibold"
                       onClick={() => navigate('/summary')}      // 👈 GO TO SUMMARY PAGE
                     >
                       <i className="bi bi-magic me-2"></i>
