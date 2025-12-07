@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';           // 👈 ADD THIS
 import { selectUser } from '../store/slices/authSlice';
 import { selectCourses } from '../store/slices/courseSlice';
 import CourseList from '../features/shared/CourseList';
+import { useTheme } from '../contexts/ThemeContext';
 
 const StudentDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();                         // 👈 AND THIS
   const user = useSelector(selectUser);
   const courses = useSelector(selectCourses);
+  const { isDark } = useTheme();
   
   const [activeView, setActiveView] = useState('dashboard');
 
@@ -33,10 +35,11 @@ const StudentDashboard = () => {
                 <i className="bi bi-mortarboard-fill text-success me-3"></i>
                 {t('pages.studentDashboard.title')}
               </h1>
-              <p className="lead text-black mb-4">
-                <b>
-                  {t('pages.studentDashboard.welcome', { name: user?.fullName })}
-                </b>
+              <p
+                className="lead mb-4"
+                style={{ color: isDark ? '#f8f9fa' : '#2c3e50', fontWeight: 600 }}
+              >
+                {t('pages.studentDashboard.welcome', { name: user?.fullName })}
               </p>
               <div className="alert alert-success border-0 rounded-3 mb-4">
                 <div className="d-flex align-items-center justify-content-center">
@@ -65,8 +68,11 @@ const StudentDashboard = () => {
                         </p>
                         <h2 className="fw-bold mb-0">{courses.length}</h2>
                       </div>
-                      <div className="bg-primary bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-collection-fill text-primary fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#0d6efd" }}
+                      >
+                        <i className="bi bi-collection-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -83,8 +89,11 @@ const StudentDashboard = () => {
                         </p>
                         <h2 className="fw-bold mb-0">{videoCourses}</h2>
                       </div>
-                      <div className="bg-danger bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-play-circle-fill text-danger fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#dc3545" }}
+                      >
+                        <i className="bi bi-play-circle-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -101,8 +110,11 @@ const StudentDashboard = () => {
                         </p>
                         <h2 className="fw-bold mb-0">{homeworkCourses}</h2>
                       </div>
-                      <div className="bg-warning bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-clipboard-check-fill text-warning fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#fd7e14" }}
+                      >
+                        <i className="bi bi-clipboard-check-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>

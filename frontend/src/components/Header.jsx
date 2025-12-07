@@ -82,23 +82,20 @@ const Header = () => {
 
   // Theme-aware color functions
   const getNavbarBg = () => {
-    if (!isScrolled) return "transparent";
+    if (!isScrolled) return "rgba(255,255,255,0.9)";
     return isDark ? "#1a1a2e" : "#ffffff";
   };
 
   const getTextColor = () => {
-    if (!isScrolled) return "#fff";
     return isDark ? "#e0e0e0" : "#2c3e50";
   };
 
   const getBrandColor = () => {
-    if (!isScrolled) return "#fff";
-    return "#667eea";
+    return isDark ? "#e0e0e0" : "#2c3e50";
   };
 
   const getBorderColor = () => {
-    if (!isScrolled) return "#fff";
-    return isDark ? "#667eea" : "#667eea";
+    return "#667eea";
   };
 
   const getDropdownBg = () => {
@@ -123,23 +120,15 @@ const Header = () => {
         isScrolled ? "shadow-lg" : ""
       }`}
       style={{
-        background: isScrolled
-          ? isDark
-            ? "rgba(26, 26, 46, 0.95)"
-            : "rgba(255, 255, 255, 0.95)"
-          : "transparent",
-        backdropFilter: isScrolled ? "blur(10px)" : "none",
-        WebkitBackdropFilter: isScrolled ? "blur(10px)" : "none",
+        background: getNavbarBg(),
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
         transition: "all 0.3s ease",
         paddingTop: "0.875rem",
         paddingBottom: "0.875rem",
         minHeight: "70px",
         zIndex: 1030,
-        borderBottom: isScrolled
-          ? isDark
-            ? "1px solid rgba(102, 126, 234, 0.1)"
-            : "1px solid rgba(0, 0, 0, 0.05)"
-          : "none",
+        borderBottom: "1px solid rgba(102, 126, 234, 0.1)",
       }}
     >
       <div className="container">
@@ -278,17 +267,24 @@ const Header = () => {
                     style={{
                       color: getTextColor(),
                       borderColor: getBorderColor(),
+                      backgroundColor: isDark
+                        ? "rgba(255,255,255,0.08)"
+                        : "rgba(0,0,0,0.05)",
                       transition: "all 0.3s ease",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = "rotate(15deg) scale(1.1)";
                       e.currentTarget.style.borderColor = "#667eea";
                       e.currentTarget.style.color = "#667eea";
+                      e.currentTarget.style.backgroundColor = "rgba(102,126,234,0.12)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = "rotate(0deg) scale(1)";
                       e.currentTarget.style.borderColor = getBorderColor();
                       e.currentTarget.style.color = getTextColor();
+                      e.currentTarget.style.backgroundColor = isDark
+                        ? "rgba(255,255,255,0.08)"
+                        : "rgba(0,0,0,0.05)";
                     }}
                   >
                     <i

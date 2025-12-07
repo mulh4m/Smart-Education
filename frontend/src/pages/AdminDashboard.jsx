@@ -14,6 +14,7 @@ import UserManagement from "../features/admin/UserManagement";
 import CreateTeacher from "../features/admin/CreateTeacher";
 import CreateCourse from "../features/shared/CreateCourse";
 import CourseList from "../features/shared/CourseList";
+import { useTheme } from "../contexts/ThemeContext";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ const AdminDashboard = () => {
   const teachers = useSelector(selectTeachers);
   const students = useSelector(selectStudents);
   const dispatch = useDispatch();
+  const { isDark } = useTheme();
 
   const [activeView, setActiveView] = useState("dashboard");
 
@@ -94,10 +96,11 @@ const AdminDashboard = () => {
                 <i className="bi bi-shield-check text-primary me-3"></i>
                 {t("pages.adminDashboard.title")}
               </h1>
-              <p className="lead text-black mb-4">
-                <b>
-                  {t("pages.adminDashboard.welcome", { name: user?.fullName })}
-                </b>
+              <p
+                className="lead mb-4"
+                style={{ color: isDark ? "#f8f9fa" : "#2c3e50", fontWeight: 600 }}
+              >
+                {t("pages.adminDashboard.welcome", { name: user?.fullName })}
               </p>
               {/* <div className="alert alert-primary border-0 rounded-3 mb-4" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
                 <div className="d-flex align-items-center justify-content-center">
@@ -139,8 +142,11 @@ const AdminDashboard = () => {
                           {stats?.totalCourses || 0}
                         </h2>
                       </div>
-                      <div className="bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-collection-fill text-primary fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#0d6efd" }}
+                      >
+                        <i className="bi bi-collection-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -157,8 +163,11 @@ const AdminDashboard = () => {
                         </p>
                         <h2 className="fw-bold mb-0">{teachers.length}</h2>
                       </div>
-                      <div className="bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-person-badge-fill text-info fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#0dcaf0" }}
+                      >
+                        <i className="bi bi-person-badge-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -175,8 +184,11 @@ const AdminDashboard = () => {
                         </p>
                         <h2 className="fw-bold mb-0">{students.length}</h2>
                       </div>
-                      <div className="bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-mortarboard-fill text-success fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#198754" }}
+                      >
+                        <i className="bi bi-mortarboard-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -195,8 +207,11 @@ const AdminDashboard = () => {
                           {stats?.totalSubjects || 0}
                         </h2>
                       </div>
-                      <div className="bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-bookmark-fill text-warning fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#fd7e14" }}
+                      >
+                        <i className="bi bi-bookmark-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>

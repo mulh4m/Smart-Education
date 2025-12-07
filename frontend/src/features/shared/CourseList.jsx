@@ -5,7 +5,9 @@ import {
   getCourses,
   deleteCourse,
   getSubmissions,
+  getSubjects,
   selectCourses,
+  selectSubjects,
   selectSubmissions,
   selectCoursesLoading,
   selectCoursesError,
@@ -21,6 +23,7 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const courses = useSelector(selectCourses);
+  const subjects = useSelector(selectSubjects);
   const token = useSelector(selectToken);
   const userRole = useSelector(selectUserRole);
   const isLoading = useSelector(selectCoursesLoading);
@@ -41,6 +44,13 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
       ["homework", "activity"].includes(section.contentType)
     );
   };
+
+  // Fetch subjects list once so the dropdown always shows all subjects, not just the currently filtered courses
+  useEffect(() => {
+    if (token && (!subjects || subjects.length === 0)) {
+      dispatch(getSubjects(token));
+    }
+  }, [dispatch, token, subjects]);
 
   useEffect(() => {
     if (token) {
@@ -231,10 +241,24 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
+  const getTotalFileSize = (course) => {
+    if (!course?.contentSections) return 0;
+    return course.contentSections.reduce((sum, section) => {
+      if (!section?.files) return sum;
+      const sectionTotal = section.files.reduce(
+        (fileSum, file) => fileSum + (file?.fileSize || 0),
+        0
+      );
+      return sum + sectionTotal;
+    }, 0);
+  };
+
   const canEditDelete = userRole === "admin" || userRole === "teacher";
 
   // Get unique subjects for filter
-  const uniqueSubjects = [...new Set(courses.map((course) => course.subject))];
+  const uniqueSubjects = subjects && subjects.length > 0
+    ? subjects
+    : [...new Set(courses.map((course) => course.subject))];
 
   return (
     <div className="container-fluid">
@@ -403,16 +427,7 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
                           <div className="d-flex align-items-center justify-content-center">
                             <i className="bi bi-file-earmark text-primary me-1"></i>
                             <small className="text-muted">
-                              {course.contentFiles &&
-                              course.contentFiles.length > 0
-                                ? formatFileSize(
-                                    course.contentFiles.reduce(
-                                      (total, file) =>
-                                        total + (file.fileSize || 0),
-                                      0
-                                    )
-                                  )
-                                : "0 Bytes"}
+                              {formatFileSize(getTotalFileSize(course))}
                             </small>
                           </div>
                         </div>

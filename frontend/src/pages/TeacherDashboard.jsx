@@ -5,6 +5,7 @@ import { selectUser, selectToken } from "../store/slices/authSlice";
 import { getCourseStats, selectCourseStats } from "../store/slices/courseSlice";
 import CreateCourse from "../features/shared/CreateCourse";
 import CourseList from "../features/shared/CourseList";
+import { useTheme } from "../contexts/ThemeContext";
 
 const TeacherDashboard = () => {
   const { t } = useTranslation();
@@ -12,6 +13,7 @@ const TeacherDashboard = () => {
   const token = useSelector(selectToken);
   const stats = useSelector(selectCourseStats);
   const dispatch = useDispatch();
+  const { isDark } = useTheme();
 
   const [activeView, setActiveView] = useState("dashboard");
 
@@ -37,7 +39,10 @@ const TeacherDashboard = () => {
                 <i className="bi bi-person-badge-fill text-info me-3"></i>
                 {t("pages.teacherDashboard.title")}
               </h1>
-              <p className="lead text-muted mb-4">
+              <p
+                className="lead mb-4"
+                style={{ color: isDark ? "#f8f9fa" : "#6c757d" }}
+              >
                 {t("pages.teacherDashboard.welcome", { name: user?.fullName })}
               </p>
               <div className="alert alert-info border-0 rounded-3 mb-4">
@@ -69,8 +74,11 @@ const TeacherDashboard = () => {
                           {stats?.totalCourses || 0}
                         </h2>
                       </div>
-                      <div className="bg-primary bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-collection-fill text-primary fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#0d6efd" }}
+                      >
+                        <i className="bi bi-collection-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -89,8 +97,11 @@ const TeacherDashboard = () => {
                           {stats?.byContentType?.video || 0}
                         </h2>
                       </div>
-                      <div className="bg-danger bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-play-circle-fill text-danger fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#dc3545" }}
+                      >
+                        <i className="bi bi-play-circle-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
@@ -109,8 +120,11 @@ const TeacherDashboard = () => {
                           {stats?.byContentType?.homework || 0}
                         </h2>
                       </div>
-                      <div className="bg-success bg-opacity-10 p-3 rounded">
-                        <i className="bi bi-clipboard-check-fill text-success fs-3"></i>
+                      <div
+                        className="p-3 rounded-3 d-flex align-items-center justify-content-center"
+                        style={{ backgroundColor: "#198754" }}
+                      >
+                        <i className="bi bi-clipboard-check-fill text-white fs-4"></i>
                       </div>
                     </div>
                   </div>
