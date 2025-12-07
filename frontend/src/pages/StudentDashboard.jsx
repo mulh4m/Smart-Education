@@ -14,9 +14,12 @@ const StudentDashboard = () => {
   
   const [activeView, setActiveView] = useState('dashboard');
 
-  const videoCourses = courses.filter(c => c.contentType === 'video').length;
-  const materialCourses = courses.filter(c => c.contentType === 'material').length;
-  const homeworkCourses = courses.filter(c => c.contentType === 'homework').length;
+  const hasContentType = (course, type) =>
+    course?.contentSections?.some((section) => section.contentType === type);
+
+  const videoCourses = courses.filter((c) => hasContentType(c, 'video')).length;
+  const materialCourses = courses.filter((c) => hasContentType(c, 'material')).length;
+  const homeworkCourses = courses.filter((c) => hasContentType(c, 'homework') || hasContentType(c, 'activity')).length;
 
   const renderContent = () => {
     switch (activeView) {

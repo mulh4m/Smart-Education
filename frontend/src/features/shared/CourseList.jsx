@@ -36,6 +36,12 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [courseToUpdate, setCourseToUpdate] = useState(null);
 
+  const hasSubmittableSections = (course) => {
+    return course?.contentSections?.some((section) =>
+      ["homework", "activity"].includes(section.contentType)
+    );
+  };
+
   useEffect(() => {
     if (token) {
       const filters = {};
@@ -50,10 +56,7 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
   // Fetch submission counts for homework/activity courses (teachers/admins only)
   useEffect(() => {
     if (token && (userRole === "admin" || userRole === "teacher")) {
-      const homeworkActivityCourses = courses.filter(
-        (course) =>
-          course.contentType === "homework" || course.contentType === "activity"
-      );
+      const homeworkActivityCourses = courses.filter(hasSubmittableSections);
 
       homeworkActivityCourses.forEach(async (course) => {
         try {
@@ -453,8 +456,7 @@ const CourseList = ({ onEdit, onCreateCourse }) => {
                         <i className="bi bi-eye me-1"></i>
                         View
                       </button>
-                      {(course.contentType === "homework" ||
-                        course.contentType === "activity") &&
+                      {hasSubmittableSections(course) &&
                         (userRole === "admin" || userRole === "teacher") && (
                           <button
                             className="btn btn-warning btn-sm"

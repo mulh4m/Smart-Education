@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
@@ -46,6 +46,12 @@ const CourseView = () => {
   const submissions = useSelector(selectSubmissions);
   const successMessage = useSelector(selectCoursesSuccess);
 
+  const hasSubmittableSections = useMemo(() => {
+    return course?.contentSections?.some((section) =>
+      ["homework", "activity"].includes(section.contentType)
+    );
+  }, [course]);
+
   useEffect(() => {
     if (token && id) {
       dispatch(getCourse({ id, token }));
@@ -54,12 +60,10 @@ const CourseView = () => {
 
   // Fetch my submission if user is a student and course is homework/activity
   useEffect(() => {
-    if (token && id && userRole === "student" && course) {
-      if (["homework", "activity"].includes(course.contentType)) {
-        dispatch(getMySubmission({ courseId: id, token }));
-      }
+    if (token && id && userRole === "student" && hasSubmittableSections) {
+      dispatch(getMySubmission({ courseId: id, token }));
     }
-  }, [dispatch, token, id, userRole, course]);
+  }, [dispatch, token, id, userRole, hasSubmittableSections]);
 
   // Fetch all submissions if user is teacher/admin and course is homework/activity
   useEffect(() => {
@@ -67,13 +71,11 @@ const CourseView = () => {
       token &&
       id &&
       (userRole === "admin" || userRole === "teacher") &&
-      course
+      hasSubmittableSections
     ) {
-      if (["homework", "activity"].includes(course.contentType)) {
-        dispatch(getSubmissions({ courseId: id, status: filterStatus, token }));
-      }
+      dispatch(getSubmissions({ courseId: id, status: filterStatus, token }));
     }
-  }, [dispatch, token, id, userRole, course, filterStatus]);
+  }, [dispatch, token, id, userRole, hasSubmittableSections, filterStatus]);
 
   useEffect(() => {
     if (error) {
